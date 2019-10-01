@@ -8,9 +8,18 @@ public abstract class GenericSearchProblem {
 	// the initial state of the search problem
 	protected State initialState;
 
-	// TODO: path cost function
-
 	// TODO: state space
+	protected Object stateSpace;
+
+	/*
+	 * getPathCost is the path cost function. Parameters: 1. parentNodeCost: The
+	 * cost of the parent node. 2. appliedOperator: The operator/action that was
+	 * used to reach the current node. 3. resultingState: The state that resulted
+	 * from applying the operator to the parent node's state. Assumption: no other
+	 * parameters are needed for cost calculations; if there are, they would be
+	 * provided by the subclass.
+	 */
+	protected abstract int getPathCost(int parentNodeCost, String appliedOperator, State resultingState);
 
 	/*
 	 * applyOperator takes an operator and the current state as inputs and returns
@@ -33,7 +42,13 @@ public abstract class GenericSearchProblem {
 		ArrayList<Node> resultingNodes = new ArrayList<>();
 
 		for (String operator : operators) {
-			// resultingNodes.add(new Node(applyOperator(currentState, operator)));
+
+			State resultingState = applyOperator(currentNode.state, operator);
+
+			int resultingPathCost = getPathCost(currentNode.pathCost, operator, resultingState);
+
+			resultingNodes
+					.add(new Node(resultingState, currentNode, operator, currentNode.depth + 1, resultingPathCost));
 		}
 
 		return resultingNodes;
