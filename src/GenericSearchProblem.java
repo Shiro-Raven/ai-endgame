@@ -8,22 +8,21 @@ public abstract class GenericSearchProblem {
 	// the initial state of the search problem
 	protected State initialState;
 
-
 	/*
-	 * getPathCost is the path cost function. Parameters: 1. parentNodeCost: The
-	 * cost of the parent node. 2. appliedOperator: The operator/action that was
-	 * used to reach the current node. 3. resultingState: The state that resulted
-	 * from applying the operator to the parent node's state. Assumption: no other
-	 * parameters are needed for cost calculations; if there are, they would be
-	 * provided by the subclass.
+	 * getPathCost is the path cost function. Parameters: 1. parentNode: The parent
+	 * node. 2. appliedOperator: The operator/action that was used to reach the
+	 * current node. 3. resultingState: The state that resulted from applying the
+	 * operator to the parent node's state. Assumption: no other parameters are
+	 * needed for cost calculations; if there are, they would be provided by the
+	 * subclass.
 	 */
-	protected abstract int getPathCost(int parentNodeCost, String appliedOperator, State resultingState);
+	protected abstract int getPathCost(Node parentNode, String appliedOperator, State resultingState);
 
 	/*
-	 * applyOperator takes an operator and the current state as inputs and returns
-	 * the new state that results from applying the operator to the current state.
-	 * Subclasses of the GenericSearchProblem should implement this method for the
-	 * method expand to work.
+	 * Transition Function: applyOperator takes an operator and the current state as
+	 * inputs and returns the new state that results from applying the operator to
+	 * the current state. Subclasses of the GenericSearchProblem should implement
+	 * this method for the method expand to work.
 	 */
 	protected abstract State applyOperator(State currentState, String operator);
 
@@ -43,7 +42,7 @@ public abstract class GenericSearchProblem {
 
 			State resultingState = applyOperator(currentNode.state, operator);
 
-			int resultingPathCost = getPathCost(currentNode.pathCost, operator, resultingState);
+			int resultingPathCost = getPathCost(currentNode, operator, resultingState);
 
 			resultingNodes
 					.add(new Node(resultingState, currentNode, operator, currentNode.depth + 1, resultingPathCost));
