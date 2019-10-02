@@ -8,8 +8,6 @@ public abstract class GenericSearchProblem {
 	// the initial state of the search problem
 	protected State initialState;
 
-	// TODO: state space
-	protected Object stateSpace;
 
 	/*
 	 * getPathCost is the path cost function. Parameters: 1. parentNodeCost: The
