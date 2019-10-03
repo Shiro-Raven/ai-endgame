@@ -29,7 +29,7 @@ public abstract class GenericSearchProblem {
 	/*
 	 * isGoalState returns true if the current state is a goal state
 	 */
-	protected abstract Boolean isGoalState(State currentState);
+	protected abstract boolean isGoalState(State currentState);
 
 	/*
 	 * TODO: finish the implementation

@@ -38,8 +38,23 @@ public class Main {
     }
 
 	// TODO: implement performGeneralSearch
-	public static Node performGeneralSearch(GenericSearchProblem problem) {
-		return new Node(null, null, 0, "");
+	public static Node performGeneralSearch(GenericSearchProblem problem, SearchAlgorithm algorithm) {
+		
+		algorithm.makeQueue(new Node(problem.initialState, null, 0, null));
+		
+		while(true) {
+			
+			if(algorithm.isQueueEmpty())
+				return null;
+			
+			Node currentNode = algorithm.dequeue();
+			
+			if(problem.isGoalState(currentNode.getState()))
+				return currentNode;
+			
+			algorithm.enqueue(problem.expand(currentNode));
+		}
+		
 	}
 	
 }
