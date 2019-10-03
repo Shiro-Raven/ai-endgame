@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import java.util.*;
 
 public class Main {
+
     static int n, m, ix, iy, tx, ty;
     static Point[] warriors;
     static Point[] stones;
@@ -39,6 +40,9 @@ public class Main {
         }
         return pts;
     }
-
-
+  
+  	// TODO: implement performGeneralSearch
+	  public static Node performGeneralSearch() {
+		  return new Node();
+	  }
 }
