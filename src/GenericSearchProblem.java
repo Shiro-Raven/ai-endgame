@@ -51,9 +51,4 @@ public abstract class GenericSearchProblem {
 		return resultingNodes;
 	}
 
-	// TODO: implement performGeneralSearch
-	protected Node performGeneralSearch() {
-		return new Node(initialState, null, 0, null);
-	}
-
 }
