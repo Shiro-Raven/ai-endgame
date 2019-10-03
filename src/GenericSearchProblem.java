@@ -40,12 +40,12 @@ public abstract class GenericSearchProblem {
 
 		for (String operator : operators) {
 
-			State resultingState = applyOperator(currentNode.state, operator);
+			State resultingState = applyOperator(currentNode.getState(), operator);
 
 			int resultingPathCost = getPathCost(currentNode, operator, resultingState);
 
 			resultingNodes
-					.add(new Node(resultingState, currentNode, operator, currentNode.depth + 1, resultingPathCost));
+					.add(new Node(resultingState, currentNode, resultingPathCost, operator));
 		}
 
 		return resultingNodes;
@@ -53,7 +53,7 @@ public abstract class GenericSearchProblem {
 
 	// TODO: implement performGeneralSearch
 	protected Node performGeneralSearch() {
-		return new Node();
+		return new Node(initialState, null, 0, null);
 	}
 
 }
