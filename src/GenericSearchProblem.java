@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public abstract class GenericSearchProblem {
 
@@ -7,6 +8,9 @@ public abstract class GenericSearchProblem {
 
 	// the initial state of the search problem
 	protected State initialState;
+
+	// a set of visited states
+	protected HashSet<State> visitedStates;
 
 	/*
 	 * getPathCost is the path cost function. Parameters: 1. parentNode: The parent
@@ -38,17 +42,27 @@ public abstract class GenericSearchProblem {
 
 		ArrayList<Node> resultingNodes = new ArrayList<>();
 
+		if (!visitedStates.add(currentNode.getState()))
+			return resultingNodes;
+
 		for (String operator : operators) {
 
 			State resultingState = applyOperator(currentNode.getState(), operator);
 
 			int resultingPathCost = getPathCost(currentNode, operator, resultingState);
 
-			resultingNodes
-					.add(new Node(resultingState, currentNode, resultingPathCost, operator));
+			resultingNodes.add(new Node(resultingState, currentNode, resultingPathCost, operator));
 		}
 
 		return resultingNodes;
+	}
+
+	/*
+	 * resetVisitedState is called before any algorithm is run to ensure that the
+	 * visited states HashSet is empty.
+	 */
+	protected void resetVisitedStates(int initialCapacity, float loadFactor) {
+		visitedStates = new HashSet<State>(initialCapacity, loadFactor);
 	}
 
 }

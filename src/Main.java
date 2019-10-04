@@ -10,6 +10,7 @@ public class Main {
 	static TreeMap<Point, Integer> stoneIdx;
 
 	public static String solve(String grid, String strategy, boolean visualize) {
+		// TODO: call resetVisitedNodes
 		return null;
 	}
 
