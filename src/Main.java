@@ -1,4 +1,3 @@
-import java.awt.*;
 import java.util.*;
 
 public class Main {
@@ -41,8 +40,7 @@ public class Main {
 	}
 
 	/*
-	 * performGeneralSearch:
-	 * The general search procedure.
+	 * performGeneralSearch: The general search procedure.
 	 */
 	public static Node performGeneralSearch(GenericSearchProblem problem, SearchAlgorithm algorithm) {
 
@@ -103,7 +101,7 @@ public class Main {
 		}
 
 	}
-	
+
 	/*
 	 * Iterative Deepening Search: Starts at a limit of 0 and continues looping till
 	 * infinity. It performs DLS and returns the result if the cutoffFlag is not
