@@ -6,6 +6,7 @@ public class Endgame extends GenericSearchProblem {
 	// Global values
 	Point thanosPos;
 	Point[] warriors;
+	Point[] stoneLocations;
 
 	public Endgame(int n, int m, int ix, int iy, int tx, int ty, Point[] stones, Point[] warriors) {
 		if (stones.length != 6) {
@@ -15,6 +16,7 @@ public class Endgame extends GenericSearchProblem {
 
 		this.thanosPos = new Point(tx, ty);
 		this.warriors = warriors;
+		this.stoneLocations = stones;
 
 		this.operators = new String[] { "up", "down", "left", "right", "collect", "kill" };
 
@@ -28,7 +30,7 @@ public class Endgame extends GenericSearchProblem {
 		// A bit representation of the alive warriors, 1 represents a warrior
 		// that's not dead yet
 		BitSet warriorsBitSet = new BitSet(warriors.length);
-		warriorsBitSet.set(0, warriors.length - 1);
+		warriorsBitSet.set(0, warriors.length);
 		this.initialState.setValue("warriorsAlive", warriorsBitSet);
 
 	}
@@ -74,7 +76,7 @@ public class Endgame extends GenericSearchProblem {
 		Point ironManLoc = (Point) currentState.getValue("ironMan");
 		Byte stones = (Byte) currentState.getValue("stones");
 
-		return (ironManLoc.compareTo(thanosPos) == 0) && (stones == 0);
+		return (ironManLoc.compareTo(thanosPos) == 0) && (stones == 0b1111_1111);
 	}
 
 }
