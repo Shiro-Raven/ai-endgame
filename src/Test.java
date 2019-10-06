@@ -1,36 +1,26 @@
-import java.util.BitSet;
 
 public class Test {
 
 	public static void main(String[] args) {
 		// testStateComparable();
-		testStateCloning();
+		// testStateCloning();
+		// testPointCompareTo();
 	}
 
-	private static void testStateCloning() {
-		State oldState = new State();
+	static void testPointCompareTo() {
+		Point testCenter = new Point(0, 0);
 
-		oldState.setValue("ironMan", new Point(5, 4));
-		oldState.setValue("stones", (byte) 192);
-		BitSet warriorsBitSet = new BitSet(9);
-		warriorsBitSet.set(0, 9 - 1);
-		oldState.setValue("warriorsAlive", warriorsBitSet);
+		System.out.println(testCenter.compareTo(new Point(-1, -1)));
+		System.out.println(testCenter.compareTo(new Point(-1, 1)));
+		System.out.println(testCenter.compareTo(new Point(-1, 0)));
 
-		State newState1 = null;
+		System.out.println(testCenter.compareTo(new Point(1, -1)));
+		System.out.println(testCenter.compareTo(new Point(1, 0)));
+		System.out.println(testCenter.compareTo(new Point(1, 1)));
 
-		newState1 = oldState.deepCopy();
-		Point ironMan = (Point) newState1.getValue("ironMan");
-		ironMan.x = 9;
-		newState1.setValue("ironMan", ironMan);
-
-		State newState2 = oldState;
-
-		System.out.println("Done Cloning");
-		System.out.println(oldState == newState1);
-		System.out.println(oldState == newState2);
-		System.out.println(((Point) oldState.getValue("ironMan")).x);
-		System.out.println(((Point) newState1.getValue("ironMan")).x);
-
+		System.out.println(testCenter.compareTo(new Point(0, -1)));
+		System.out.println(testCenter.compareTo(new Point(0, 0)));
+		System.out.println(testCenter.compareTo(new Point(0, 1)));
 	}
 
 	static void testStateComparable() {

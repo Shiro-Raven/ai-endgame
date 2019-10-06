@@ -1,5 +1,4 @@
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Map.Entry;
 
 public class State implements Comparable<State> {
@@ -15,12 +14,6 @@ public class State implements Comparable<State> {
 
 	public void setValue(String key, Object value) {
 		contents.put(key, value);
-	}
-
-	public State deepCopy() {
-		// TODO
-		
-		return null;
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })

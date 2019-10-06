@@ -2,12 +2,6 @@ import java.util.*;
 
 public class Main {
 
-	static int n, m, ix, iy, tx, ty;
-	static Point[] warriors;
-	static Point[] stones;
-	static TreeMap<Point, Integer> warriorIdx;
-	static TreeMap<Point, Integer> stoneIdx;
-
 	public static String solve(String grid, String strategy, boolean visualize) {
 		Endgame problemInstance = parser(grid);
 		
@@ -16,6 +10,9 @@ public class Main {
 	}
 
 	static Endgame parser(String grid) {
+		int n, m, ix, iy, tx, ty;
+		Point[] warriors;
+		Point[] stones;
 		String[] variables = grid.split(";");
 		StringTokenizer st = new StringTokenizer(variables[0] + "," + variables[1] + "," + variables[2], ",");
 		n = Integer.parseInt(st.nextToken());
@@ -25,9 +22,9 @@ public class Main {
 		tx = Integer.parseInt(st.nextToken());
 		ty = Integer.parseInt(st.nextToken());
 		stones = stonesAndWarriors(variables[3],
-				stoneIdx = new TreeMap<>((a, b) -> (a.x != b.x ? a.x - b.x : a.y - b.y)));
+				new TreeMap<>((a, b) -> (a.x != b.x ? a.x - b.x : a.y - b.y)));
 		warriors = stonesAndWarriors(variables[4],
-				warriorIdx = new TreeMap<>((a, b) -> (a.x != b.x ? a.x - b.x : a.y - b.y)));
+				new TreeMap<>((a, b) -> (a.x != b.x ? a.x - b.x : a.y - b.y)));
 		
 		return new Endgame(n,m,ix,iy,tx,ty,stones,warriors);
 	}

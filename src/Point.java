@@ -6,8 +6,9 @@ public class Point implements Comparable<Point>, Cloneable {
 		y = b;
 	}
 	
-	public Object clone() throws CloneNotSupportedException{
-		return super.clone();
+	public Point(Point p){
+		x = p.x;
+		y = p.y;
 	}
 
 	@Override
