@@ -1,10 +1,13 @@
-
-public class Point implements Comparable<Point> {
+public class Point implements Comparable<Point>, Cloneable {
 	int x, y;
 
 	public Point(int a, int b) {
 		x = a;
 		y = b;
+	}
+	
+	public Object clone() throws CloneNotSupportedException{
+		return super.clone();
 	}
 
 	@Override

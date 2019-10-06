@@ -9,11 +9,13 @@ public class Main {
 	static TreeMap<Point, Integer> stoneIdx;
 
 	public static String solve(String grid, String strategy, boolean visualize) {
+		Endgame problemInstance = parser(grid);
+		
 		// TODO: call resetVisitedNodes
 		return null;
 	}
 
-	static void parser(String grid) {
+	static Endgame parser(String grid) {
 		String[] variables = grid.split(";");
 		StringTokenizer st = new StringTokenizer(variables[0] + "," + variables[1] + "," + variables[2], ",");
 		n = Integer.parseInt(st.nextToken());
@@ -26,6 +28,8 @@ public class Main {
 				stoneIdx = new TreeMap<>((a, b) -> (a.x != b.x ? a.x - b.x : a.y - b.y)));
 		warriors = stonesAndWarriors(variables[4],
 				warriorIdx = new TreeMap<>((a, b) -> (a.x != b.x ? a.x - b.x : a.y - b.y)));
+		
+		return new Endgame(n,m,ix,iy,tx,ty,stones,warriors);
 	}
 
 	static Point[] stonesAndWarriors(String representation, TreeMap<Point, Integer> ptsToIdx) {

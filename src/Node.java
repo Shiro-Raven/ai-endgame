@@ -1,4 +1,3 @@
-
 public class Node {
 	private Node parentNode;
 	private State state;
