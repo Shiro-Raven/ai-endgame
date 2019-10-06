@@ -8,6 +8,7 @@ public class UCS implements SearchAlgorithm {
 	@Override
 	public void makeQueue(Node initialState) {
 		generatedNodes = new PriorityQueue<>((nodeA, nodeB) -> nodeA.getPathCost() - nodeB.getPathCost());
+		generatedNodes.add(initialState);
 	}
 
 	@Override
