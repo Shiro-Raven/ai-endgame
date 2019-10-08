@@ -63,60 +63,21 @@ public class Main {
 	}
 
 	/*
-	 * Depth-limited search: returns a node The node's operator is the cutoffFlag if
-	 * the cutoff was reached. The node is null if failure occurred. Otherwise the
-	 * node is the goal node. The cutoffFlag static string is used to mark that a
-	 * cutoff occurred.
-	 */
-	static final String cutoffFlag = "###$$$@@@";
-
-	protected static Node performDLS(GenericSearchProblem problem, long limit) {
-		return recursiveDLS(new Node(problem.initialState, null, 0, null), problem, limit);
-	}
-
-	private static Node recursiveDLS(Node node, GenericSearchProblem problem, long limit) {
-
-		if (problem.isGoalState(node.getState()))
-			return node;
-		else {
-			if (limit == 0)
-				return new Node(null, null, 0, cutoffFlag);
-			else {
-				boolean cutoffOccurred = false;
-
-				for (Node childNode : problem.expand(node)) {
-					Node result = recursiveDLS(childNode, problem, limit - 1);
-					if (result.getOperator() == cutoffFlag)
-						cutoffOccurred = true; // cut-off detected
-					else {
-						if (result != null)
-							return result; // goal reached
-					}
-				}
-
-				if (cutoffOccurred)
-					return new Node(null, null, 0, cutoffFlag); // cut-off
-				else
-					return null; // failure
-			}
-		}
-
-	}
-
-	/*
 	 * Iterative Deepening Search: Starts at a limit of 0 and continues looping till
-	 * infinity. It performs DLS and returns the result if the cutoffFlag is not
+	 * infinity. It performs DLS and returns the result if the failure is not
 	 * detected.
 	 */
 	protected static Node performIDS(GenericSearchProblem problem) {
 
-		long limit = 0;
+		int limit = 0;
 
 		while (true) {
+			
+			DLS depthLimitedSearch = new DLS(limit);
+			
+			Node result = performGeneralSearch(problem, depthLimitedSearch);
 
-			Node result = performDLS(problem, limit);
-
-			if (result.getOperator() != cutoffFlag)
+			if (result != null)
 				return result;
 
 			limit++;
