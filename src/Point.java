@@ -1,18 +1,36 @@
 public class Point implements Comparable<Point>, Cloneable {
-	int x, y;
+    int x, y;
 
-	public Point(int a, int b) {
-		x = a;
-		y = b;
-	}
-	
-	public Point(Point p){
-		x = p.x;
-		y = p.y;
-	}
+    public Point(int a, int b) {
+        x = a;
+        y = b;
+    }
 
-	@Override
-	public int compareTo(Point o) {
-		return x != o.x ? x - o.x : y - o.y;
-	}
+    public Point(Point p) {
+        x = p.x;
+        y = p.y;
+    }
+
+    void move(String direction) {
+        switch (direction) {
+            case "up":
+                x--;
+                return;
+            case "down":
+                x++;
+                return;
+            case "left":
+                y--;
+                return;
+            case "right":
+                y++;
+                return;
+        }
+        return;
+    }
+
+    @Override
+    public int compareTo(Point o) {
+        return x != o.x ? x - o.x : y - o.y;
+    }
 }

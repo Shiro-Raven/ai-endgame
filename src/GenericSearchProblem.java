@@ -11,7 +11,6 @@ public abstract class GenericSearchProblem {
 
 	// a set of visited states
 	protected HashSet<State> visitedStates;
-	
 
 	/*
 	 * getPathCost is the path cost function. Parameters: 1. parentNode: The parent
@@ -49,6 +48,9 @@ public abstract class GenericSearchProblem {
 		for (String operator : operators) {
 
 			State resultingState = applyOperator(currentNode.getState(), operator);
+			
+			if (resultingState == null)
+				continue;
 
 			int resultingPathCost = getPathCost(currentNode, operator, resultingState);
 
