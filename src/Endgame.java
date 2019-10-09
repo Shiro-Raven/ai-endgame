@@ -124,15 +124,26 @@ public class Endgame extends GenericSearchProblem {
             case "left":
                 Point newLoc = new Point(ironManLoc);
                 newLoc.move(operator);
+                
                 // Validation: Point is outside the grid.
                 if (!isInsideGrid(newLoc))
                     return null;
                 newState.setValue(stateContents.ironMan.label, newLoc);
+                
+                // Validation: Can't move to Thanos cell if not all stones collected
+                if(ironManLoc.compareTo(thanosPos) == 0 && (byte) currentState.getValue(stateContents.stones.label) != 0)
+                	return null;
+                
+                // Validation: Can't move to cell with warrior
+                if(warriorsIdx.get(ironManLoc) != null)
+                	return null;
+          
                 changedField = 0;
                 break;
             case "collect":
                 Integer stoneIdx = stonesIdx.get(ironManLoc);
                 byte stonesLeft = (byte) currentState.getValue(stateContents.stones.label);
+                
                 // Validation: Point doesn't contain a stone, or stone is already collected.
                 if (stoneIdx == null || (stonesLeft & (1 << stoneIdx)) == 0)
                     return null;
@@ -155,7 +166,7 @@ public class Endgame extends GenericSearchProblem {
                 changedField = 2;
                 break;
             default:
-                ; // TODO: Throw some type of exception (return null?)
+                return null;
         }
 
         // Copy the unchanged fields

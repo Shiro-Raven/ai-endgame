@@ -2,11 +2,11 @@ import java.util.ArrayList;
 import java.util.Stack;
 
 public class DLS implements SearchAlgorithm {
-	
+
 	private int limit;
-	
+
 	Stack<Node> generatedNodes;
-	
+
 	public DLS(int limit) {
 		this.limit = limit;
 	}
@@ -19,8 +19,8 @@ public class DLS implements SearchAlgorithm {
 
 	@Override
 	public void enqueue(ArrayList<Node> nodes) {
-		for(Node node : nodes) {
-			if(node.getDepth()<=limit)
+		for (Node node : nodes) {
+			if (node.getDepth() <= limit)
 				generatedNodes.push(node);
 		}
 	}
@@ -34,5 +34,5 @@ public class DLS implements SearchAlgorithm {
 	public boolean isQueueEmpty() {
 		return generatedNodes.isEmpty();
 	}
-	
+
 }
