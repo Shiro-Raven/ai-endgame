@@ -1,4 +1,3 @@
-
 public class Test {
 
 	public static void main(String[] args) {
@@ -7,19 +6,19 @@ public class Test {
 		// testPointCompareTo();
 		// testWarriorsConst();
 	}
-	
-	static void testWarriorsConst(){
+
+	static void testWarriorsConst() {
 		Warriors normal = new Warriors(5);
 		System.out.println(normal.toString());
-		
+
 		normal.kill(2);
 		System.out.println(normal.toString());
-		
+
 		Warriors changed = new Warriors(normal);
 		System.out.println(changed.toString());
-		
+
 		changed.kill(0);
-		
+
 		System.out.println("--------------");
 		System.out.println(normal);
 		System.out.println(changed);

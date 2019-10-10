@@ -4,6 +4,41 @@ public class Main {
 
 	public static String solve(String grid, String strategy, boolean visualize) {
 		Endgame problemInstance = parser(grid);
+		
+		SearchAlgorithm algorithm = null;
+		int heuristic;
+		switch (strategy) {
+		case "BF":
+			algorithm = new BFS();
+			break;
+		case "DF":
+			algorithm = new DFS();
+			break;
+		case "ID":
+			break;
+		case "UC":
+			algorithm = new UCS();
+			break;
+		case "GR1":
+		case "GR2":
+			heuristic = Character.getNumericValue(strategy.charAt(strategy.length() - 1)); 
+					
+			break;
+		case "AS1":
+		case "AS2":
+			heuristic = Character.getNumericValue(strategy.charAt(strategy.length() - 1));
+			
+			break;
+		default:
+			
+			break;
+		}
+		
+		if(!strategy.equals("ID")){
+			performGeneralSearch(problemInstance, algorithm);
+		} else {
+			performIDS(problemInstance);
+		}
 
 		// TODO: call resetVisitedNodes
 		return null;
