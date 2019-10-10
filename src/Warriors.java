@@ -5,9 +5,9 @@ public class Warriors implements Comparable<Warriors> {
 
 	public Warriors(int noOfWarriors) {
 		bitMask = new BitSet(noOfWarriors);
-        bitMask.set(0, noOfWarriors);
+		bitMask.set(0, noOfWarriors);
 	}
-	
+
 	public Warriors(Warriors oldWarriors) {
 		bitMask = (BitSet) oldWarriors.bitMask.clone();
 	}
@@ -22,6 +22,15 @@ public class Warriors implements Comparable<Warriors> {
 
 	protected boolean isAlive(int warriorIdx) {
 		return bitMask.get(warriorIdx);
+	}
+
+	public String toString() {
+		StringBuilder s = new StringBuilder();
+		for (int i = 0; i < bitMask.length(); i++) {
+			s.append(bitMask.get(i) == true ? 1 : 0);
+		}
+
+		return s.toString();
 	}
 
 	@Override

@@ -133,8 +133,10 @@ public class Endgame extends GenericSearchProblem {
                 if(ironManLoc.compareTo(thanosPos) == 0 && (byte) currentState.getValue(stateContents.stones.label) != 0)
                 	return null;
                 
-                // Validation: Can't move to cell with warrior
-                if(warriorsIdx.get(ironManLoc) != null)
+                // Validation: Can't move to cell with ALIVE warrior
+                Warriors warriors = (Warriors) currentState.getValue(stateContents.warriors.label);
+                Integer warriorIdx = warriorsIdx.get(ironManLoc);
+                if(warriorIdx != null && warriors.isAlive(warriorIdx))
                 	return null;
           
                 changedField = 0;
