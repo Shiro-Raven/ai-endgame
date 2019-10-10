@@ -159,7 +159,7 @@ public class Endgame extends GenericSearchProblem {
                 
                 boolean warriorsDead = false;
                 for(int i = 0; i < diffX.length; i++){
-                	Integer curr = warriorsIdx.get(new Point(diffX[i], diffY[i]));
+                	Integer curr = warriorsIdx.get(new Point(ironManLoc.x + diffX[i], ironManLoc.y + diffY[i]));
                 	
                 	if(curr != null && newWarriors.isAlive(curr)){
                 		newWarriors.kill(curr);
