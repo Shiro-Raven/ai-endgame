@@ -20,8 +20,8 @@ public class Endgame extends GenericSearchProblem {
     private static final int warriorKill = 2;
     private static final int stoneCollect = 3;
     // Adjacent cells
-    private static int[] diffX = {0, 0, 1, 1, 1, -1, -1, -1};
-    private static int[] diffY = {-1, 1, -1, 0, 1, -1, 0, 1};
+    private static int[] diffX = { 0, 0, 1, -1};
+    private static int[] diffY = {-1, 1, 0,  0};
 
     enum stateContents {
         ironMan("ironMan"), stones("stones"), warriors("warriors");
@@ -55,13 +55,14 @@ public class Endgame extends GenericSearchProblem {
 
         this.initialState = new State();
         this.initialState.setValue(stateContents.ironMan.label, new Point(ix, iy));
+        
         // A byte value of 00_111_111 where each zero represents one of the
         // stones.
         this.initialState.setValue(stateContents.stones.label, (byte) (1 << 6) - 1);
+        
         // A bit representation of the alive warriors, 1 represents a warrior
         // that's not dead yet
-        BitSet warriorsBitSet = new BitSet(warriors.length);
-        warriorsBitSet.set(0, warriors.length);
+        Warriors warriorsBitSet = new Warriors(warriors.length);
         this.initialState.setValue(stateContents.warriors.label, warriorsBitSet);
     }
 
@@ -110,8 +111,6 @@ public class Endgame extends GenericSearchProblem {
 
     @Override
     protected State applyOperator(State currentState, String operator) {
-        // TODO: Legality of an operator
-
         State newState = new State();
 
         int changedField = 0;
@@ -153,16 +152,24 @@ public class Endgame extends GenericSearchProblem {
                 changedField = 1;
                 break;
             case "kill":
-                BitSet newBitset = new BitSet(warriors.length);
-                for (int i = 0; i < warriors.length; i++) {
-                    if (Math.abs(ironManLoc.compareTo(warriors[i])) <= 1) {
-                        newBitset.set(i);
-                        if (newBitset.cardinality() == 9)
-                            break;
-                    }
+                Warriors oldWarriors = (Warriors) currentState.getValue(stateContents.warriors.label);
+                Warriors newWarriors = new Warriors(oldWarriors);
+                
+                boolean warriorsDead = false;
+                for(int i = 0; i < diffX.length; i++){
+                	Integer curr = warriorsIdx.get(new Point(diffX[i], diffY[i]));
+                	
+                	if(curr != null && newWarriors.isAlive(curr)){
+                		newWarriors.kill(curr);
+                		warriorsDead = true;
+                	}
                 }
-                newBitset.xor((BitSet) currentState.getValue(stateContents.warriors.label));
-                newState.setValue(stateContents.warriors.label, newBitset);
+                
+                // If no warriors are killed, then the move is not allowed
+                if(!warriorsDead)
+                	return null;
+                
+                newState.setValue(stateContents.warriors.label, newWarriors);
                 changedField = 2;
                 break;
             default:
@@ -198,7 +205,6 @@ public class Endgame extends GenericSearchProblem {
     }
 
     private boolean isInsideGrid(Point p) {
-        // TODO: zero indexed or 1 indexed?
         return 0 <= p.x && p.x < rows && 0 <= p.y && p.y < columns;
     }
 

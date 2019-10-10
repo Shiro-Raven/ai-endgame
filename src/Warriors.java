@@ -5,11 +5,11 @@ public class Warriors implements Comparable<Warriors> {
 
 	public Warriors(int noOfWarriors) {
 		bitMask = new BitSet(noOfWarriors);
+        bitMask.set(0, noOfWarriors);
 	}
 	
-	public Warriors(Warriors oldWarriors, int killedWarrior) {
+	public Warriors(Warriors oldWarriors) {
 		bitMask = (BitSet) oldWarriors.bitMask.clone();
-		kill(killedWarrior);
 	}
 
 	protected void add(int warriorIdx) {
