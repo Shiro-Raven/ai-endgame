@@ -261,6 +261,8 @@ public class Endgame extends GenericSearchProblem {
 		}
 	}
 	
+	
+	@SuppressWarnings("unused")
 	private boolean isStone(State stateToExamine, Point locationToExamine) {
 		// retrieve stone index
 		Integer stoneIndex = stonesIdx.get(locationToExamine);
