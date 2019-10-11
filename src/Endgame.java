@@ -1,3 +1,4 @@
+import java.util.BitSet;
 import java.util.TreeMap;
 
 public class Endgame extends GenericSearchProblem {
@@ -23,7 +24,7 @@ public class Endgame extends GenericSearchProblem {
     private static int[] diffY = {-1, 1, 0,  0};
 
     enum stateContents {
-        ironMan("ironMan"), stones("stones"), warriors("warriors");
+        ironMan("ironMan"), stones("stones"), warriors("warriors"), damage("damage");
 
         private final String label;
 
@@ -52,6 +53,13 @@ public class Endgame extends GenericSearchProblem {
 
         this.operators = new String[]{"up", "down", "left", "right", "collect", "kill"};
 
+        /*
+         * State consists of:
+         * 1. ironMan location.
+         * 2. Stones picked up or not.
+         * 3. Warriors defeated or not.
+         * 4. Damage received so far.
+         */
         this.initialState = new State();
         this.initialState.setValue(stateContents.ironMan.label, new Point(ix, iy));
         
@@ -63,6 +71,9 @@ public class Endgame extends GenericSearchProblem {
         // that's not dead yet
         Warriors warriorsBitSet = new Warriors(warriors.length);
         this.initialState.setValue(stateContents.warriors.label, warriorsBitSet);
+        
+        // the initial damage is 0
+        this.initialState.setValue(stateContents.damage.label, (int) 0);
     }
 
     @Override
@@ -71,26 +82,41 @@ public class Endgame extends GenericSearchProblem {
 
         Point ironManLoc = (Point) resultingState.getValue(stateContents.ironMan.label);
 
-        // adjacent warriors or thanos present
-        int counter = 0;
+        // adjacent warriors or Thanos present
+        int warriorsCounterPreviousState = 0;
+        int warriorsCounterResultingState = 0;
         boolean thanosPresent = false;
+        
         for (int i = 0; i < diffX.length; i++) {
             int newX = ironManLoc.x + diffX[i], newY = ironManLoc.y + diffY[i];
             Point adjPoint = new Point(newX, newY);
-            if (isWarrior(adjPoint))
-                counter++;
+            
+            // kill requires a check on the previous state; other operators on the resulting one
+            if (appliedOperator == "kill") {
+            	if(isWarrior(parentNode.getState(), adjPoint)) {
+            		warriorsCounterPreviousState++;
+            	}
+            } else {
+            	if(isWarrior(resultingState, adjPoint)) {
+            		warriorsCounterResultingState++;
+            	}
+            }
 
             // Thanos is adjacent to iron man
             if (thanosPos.compareTo(adjPoint) == 0) {
                 thanosPresent = true;
             }
         }
+        
+		// Thanos is in the same location as Iron Man
+		if (thanosPos.compareTo(ironManLoc) == 0)
+			thanosPresent = true;
 
         cost += thanosPresent ? thanosAttack : 0;
 
         switch (appliedOperator) {
             case "kill":
-                cost = counter * warriorKill;
+                cost = warriorsCounterPreviousState * warriorKill;
                 break;
             case "collect":
                 cost += stoneCollect;
@@ -98,7 +124,7 @@ public class Endgame extends GenericSearchProblem {
             case "down":
             case "left":
             case "right":
-                cost = counter * warriorAttack;
+                cost = warriorsCounterResultingState * warriorAttack;
                 break;
 
             default:
@@ -201,9 +227,23 @@ public class Endgame extends GenericSearchProblem {
 
     /*-----------------------------------------------Utility methods--------------------------------------------------*/
 
-    private boolean isWarrior(Point p) {
-        return warriorsIdx.containsKey(p);
-    }
+	private boolean isWarrior(State stateToExamine, Point locationToExamine) {
+		// retrieve warrior index
+		Integer warriorIndex = warriorsIdx.get(locationToExamine);
+
+		// location does not correspond to a warrior
+		if (warriorIndex == null)
+			return false;
+
+		// check if the warrior is alive
+		Warriors warriorsInState = (Warriors) stateToExamine.getValue(stateContents.warriors.label);
+
+		if (warriorsInState.isAlive(warriorIndex)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
     private boolean isInsideGrid(Point p) {
         return 0 <= p.x && p.x < rows && 0 <= p.y && p.y < columns;
