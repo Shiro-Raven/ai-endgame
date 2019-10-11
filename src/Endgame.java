@@ -1,4 +1,3 @@
-import java.util.BitSet;
 import java.util.TreeMap;
 
 public class Endgame extends GenericSearchProblem {
@@ -77,6 +76,10 @@ public class Endgame extends GenericSearchProblem {
     }
 
     @Override
+    /*
+     * Calculates path cost and returns it.
+     * Assigns the path cost to the damage variable of the state.
+     */
     protected int getPathCost(Node parentNode, String appliedOperator, State resultingState) {
         int cost = 0;
 
@@ -130,12 +133,24 @@ public class Endgame extends GenericSearchProblem {
             default:
                 break;
         }
-
-        return parentNode.getPathCost() + cost;
+        
+        int finalCost = parentNode.getPathCost() + cost;
+        
+        resultingState.setValue(stateContents.damage.label, finalCost);
+        
+        return finalCost;
     }
 
     @Override
     protected State applyOperator(State currentState, String operator) {
+    	
+		// return no results if the currentState has damage >= 100
+		Integer damageInCurrentState = (Integer) currentState.getValue(stateContents.damage.label);
+
+		if (damageInCurrentState >= 100) {
+			return null;
+		}
+    	
         State newState = new State();
 
         int changedField = 0;
@@ -219,10 +234,11 @@ public class Endgame extends GenericSearchProblem {
 
     @Override
     protected boolean isGoalState(State currentState) {
-        Point ironManLoc = (Point) currentState.getValue("ironMan");
-        Byte stones = (Byte) currentState.getValue("stones");
-
-        return (ironManLoc.compareTo(thanosPos) == 0) && (stones == 0);
+        Point ironManLoc = (Point) currentState.getValue(stateContents.ironMan.label);
+        Byte stones = (Byte) currentState.getValue(stateContents.stones.label);
+        Integer damage = (Integer) currentState.getValue(stateContents.damage.label);
+        
+        return (ironManLoc.compareTo(thanosPos) == 0) && (stones == 0) && (damage < 100);
     }
 
     /*-----------------------------------------------Utility methods--------------------------------------------------*/
