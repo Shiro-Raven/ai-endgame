@@ -167,26 +167,26 @@ public class Endgame extends GenericSearchProblem {
                 // Validation: Point is outside the grid.
                 if (!isInsideGrid(newLoc))
                     return null;
-                newState.setValue(stateContents.ironMan.label, newLoc);
                 
                 // Validation: Can't move to Thanos cell if not all stones collected
-                if(ironManLoc.compareTo(thanosPos) == 0 && (byte) currentState.getValue(stateContents.stones.label) != 0)
+                if( (newLoc.compareTo(thanosPos) == 0) && ((byte) currentState.getValue(stateContents.stones.label) != 0))
                 	return null;
                 
                 // Validation: Can't move to cell with ALIVE warrior
-                Warriors warriors = (Warriors) currentState.getValue(stateContents.warriors.label);
-                Integer warriorIdx = warriorsIdx.get(ironManLoc);
-                if(warriorIdx != null && warriors.isAlive(warriorIdx))
+                if(isWarrior(currentState, newLoc))
                 	return null;
+                
+                newState.setValue(stateContents.ironMan.label, newLoc);
           
-                changedField = 0;
+                changedField = 0;                
                 break;
             case "collect":
+            	
                 Integer stoneIdx = stonesIdx.get(ironManLoc);
                 byte stonesLeft = (byte) currentState.getValue(stateContents.stones.label);
                 
                 // Validation: Point doesn't contain a stone, or stone is already collected.
-                if (stoneIdx == null || (stonesLeft & (1 << stoneIdx)) == 0)
+                if ( (stoneIdx == null) || ((stonesLeft & (1 << stoneIdx)) == 0))
                     return null;
 
                 stonesLeft ^= (byte) (1 << stoneIdx);
@@ -201,7 +201,7 @@ public class Endgame extends GenericSearchProblem {
                 for(int i = 0; i < diffX.length; i++){
                 	Integer curr = warriorsIdx.get(new Point(ironManLoc.x + diffX[i], ironManLoc.y + diffY[i]));
                 	
-                	if(curr != null && newWarriors.isAlive(curr)){
+                	if( (curr != null) && newWarriors.isAlive(curr)){
                 		newWarriors.kill(curr);
                 		warriorsDead = true;
                 	}
@@ -259,6 +259,23 @@ public class Endgame extends GenericSearchProblem {
 		} else {
 			return false;
 		}
+	}
+	
+	private boolean isStone(State stateToExamine, Point locationToExamine) {
+		// retrieve stone index
+		Integer stoneIndex = stonesIdx.get(locationToExamine);
+
+		// location does not correspond to a stone
+		if (stoneIndex == null)
+			return false;
+
+		// check if the stone has not been already picked up
+		byte stonesLeft = (byte) stateToExamine.getValue(stateContents.stones.label);
+
+		if ((stonesLeft & (1 << stoneIndex)) == 0)
+			return false;
+		else
+			return true;
 	}
 
     private boolean isInsideGrid(Point p) {
