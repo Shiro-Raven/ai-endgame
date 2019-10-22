@@ -235,7 +235,7 @@ public class Endgame extends GenericSearchProblem {
     	
         Point ironManLoc = (Point) currentState.getValue(stateContents.ironMan.label);
         Byte stones = (Byte) currentState.getValue(stateContents.stones.label);
-        int damage = (Integer) currentNode.getPathCost();
+        int damage = currentNode.getPathCost();
         
         return (ironManLoc.compareTo(thanosPos) == 0) && (stones == 0) && (damage < 100);
     }
