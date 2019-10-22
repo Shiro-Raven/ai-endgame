@@ -23,7 +23,7 @@ public class Endgame extends GenericSearchProblem {
     private static int[] diffY = {-1, 1, 0,  0};
 
     enum stateContents {
-        ironMan("ironMan"), stones("stones"), warriors("warriors"), damage("damage");
+        ironMan("ironMan"), stones("stones"), warriors("warriors");
 
         private final String label;
 
@@ -71,8 +71,6 @@ public class Endgame extends GenericSearchProblem {
         Warriors warriorsBitSet = new Warriors(warriors.length);
         this.initialState.setValue(stateContents.warriors.label, warriorsBitSet);
         
-        // the initial damage is 0
-        this.initialState.setValue(stateContents.damage.label, (int) 0);
     }
 
     @Override
@@ -134,18 +132,16 @@ public class Endgame extends GenericSearchProblem {
                 break;
         }
         
-        int finalCost = parentNode.getPathCost() + cost;
-        
-        resultingState.setValue(stateContents.damage.label, finalCost);
-        
-        return finalCost;
+        return parentNode.getPathCost() + cost;
     }
 
     @Override
-    protected State applyOperator(State currentState, String operator) {
+    protected State applyOperator(Node currentNode, String operator) {
+    	
+    	State currentState = currentNode.getState();
     	
 		// return no results if the currentState has damage >= 100
-		Integer damageInCurrentState = (Integer) currentState.getValue(stateContents.damage.label);
+		int damageInCurrentState = currentNode.getPathCost();
 
 		if (damageInCurrentState >= 100) {
 			return null;
@@ -233,10 +229,13 @@ public class Endgame extends GenericSearchProblem {
 
 
     @Override
-    protected boolean isGoalState(State currentState) {
+    protected boolean isGoalState(Node currentNode) {
+    	
+    	State currentState = currentNode.getState();
+    	
         Point ironManLoc = (Point) currentState.getValue(stateContents.ironMan.label);
         Byte stones = (Byte) currentState.getValue(stateContents.stones.label);
-        Integer damage = (Integer) currentState.getValue(stateContents.damage.label);
+        int damage = (Integer) currentNode.getPathCost();
         
         return (ironManLoc.compareTo(thanosPos) == 0) && (stones == 0) && (damage < 100);
     }

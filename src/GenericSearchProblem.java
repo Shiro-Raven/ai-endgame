@@ -28,12 +28,12 @@ public abstract class GenericSearchProblem {
 	 * the current state. Subclasses of the GenericSearchProblem should implement
 	 * this method for the method expand to work.
 	 */
-	protected abstract State applyOperator(State currentState, String operator);
+	protected abstract State applyOperator(Node currentNode, String operator);
 
 	/*
 	 * isGoalState returns true if the current state is a goal state
 	 */
-	protected abstract boolean isGoalState(State currentState);
+	protected abstract boolean isGoalState(Node currentNode);
 
 	/*
 	 * TODO: finish the implementation
@@ -47,7 +47,7 @@ public abstract class GenericSearchProblem {
 
 		for (String operator : operators) {
 
-			State resultingState = applyOperator(currentNode.getState(), operator);
+			State resultingState = applyOperator(currentNode, operator);
 			
 			if (resultingState == null)
 				continue;

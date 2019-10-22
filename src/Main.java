@@ -92,7 +92,7 @@ public class Main {
 
 			Node currentNode = algorithm.dequeue();
 
-			if (problem.isGoalState(currentNode.getState()))
+			if (problem.isGoalState(currentNode))
 				return currentNode;
 
 			algorithm.enqueue(problem.expand(currentNode));
