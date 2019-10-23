@@ -27,4 +27,9 @@ public class BFS implements SearchAlgorithm {
 		return frontier.isEmpty();
 	}
 
+	@Override
+	public void printQueue() {
+		System.out.println(frontier.toString());
+	}
+
 }

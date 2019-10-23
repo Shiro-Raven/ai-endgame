@@ -9,5 +9,7 @@ public interface SearchAlgorithm {
     Node dequeue();
     
     boolean isQueueEmpty();
+    
+    void printQueue();
 
 }

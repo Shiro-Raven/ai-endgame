@@ -35,7 +35,7 @@ public class Main {
 			break;
 		}
 
-		problemInstance.resetVisitedStates((int) Math.pow(problemInstance.rows, 2), 0.7f); 
+		problemInstance.resetVisitedStates(); 
 		
 		Node finalNode;
 		if (!strategy.equals("ID")) {
@@ -45,6 +45,10 @@ public class Main {
 		}
 		
 		System.out.println(finalNode);
+		Stack<Node> st = problemInstance.getFullSolution(finalNode);
+		while(!st.isEmpty()) {
+			problemInstance.visualizeState(st.pop());
+		}
 
 		return null;
 	}
@@ -65,9 +69,9 @@ public class Main {
 		ty = Integer.parseInt(st.nextToken());
 
 		stones = stonesAndWarriors(variables[3],
-				warriorsIdx = new TreeMap<>((a, b) -> (a.x != b.x ? a.x - b.x : a.y - b.y)));
-		warriors = stonesAndWarriors(variables[4],
 				stonesIdx = new TreeMap<>((a, b) -> (a.x != b.x ? a.x - b.x : a.y - b.y)));
+		warriors = stonesAndWarriors(variables[4],
+				warriorsIdx = new TreeMap<>((a, b) -> (a.x != b.x ? a.x - b.x : a.y - b.y)));
 
 		return new Endgame(n, m, ix, iy, tx, ty, stones, warriors, warriorsIdx, stonesIdx);
 	}

@@ -1,7 +1,7 @@
 public class Test {
 
 	public static void main(String[] args) {
-		// testStateComparable();
+		testStateComparable();
 		// testStateCloning();
 		// testPointCompareTo();
 		// testWarriorsConst();
@@ -43,18 +43,19 @@ public class Test {
 	static void testStateComparable() {
 		State state = new State();
 		state.setValue("position", new Point(3, 2));
-		Warriors warriors = new Warriors(10);
-		warriors.add(1);
-		warriors.add(6);
+		Warriors warriors = new Warriors(7);
+		warriors.kill(6);
+		warriors.kill(1);
+		System.out.println(warriors);
 		state.setValue("warriors", warriors);
 		state.setValue("stones", 1 << 4);
 		State otherState = new State();
 		otherState.setValue("position", new Point(2, 2));
-		Warriors otherWarriors = new Warriors(9);
-		otherWarriors.add(2);
-		otherWarriors.add(5);
+		Warriors otherWarriors = new Warriors(7);
+		otherWarriors.kill(6);
+		otherWarriors.kill(1);
 		otherState.setValue("warriors", otherWarriors);
-		otherState.setValue("stones", 1 << 5);
+		otherState.setValue("stones", 1 << 4);
 		System.out.println(state.compareTo(otherState));
 	}
 

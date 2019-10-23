@@ -3,16 +3,16 @@ public class Node {
 	private State state;
 	private int pathCost;
 	private String operator;
-	
+
 	private int depth;
-	
-	public Node(State state, Node parentNode, int pathCost, String operator){
+
+	public Node(State state, Node parentNode, int pathCost, String operator) {
 		this.parentNode = parentNode;
 		this.state = state;
 		this.pathCost = pathCost;
 		this.operator = operator;
-		
-		this.depth = parentNode == null? 0 : parentNode.depth + 1;
+
+		this.depth = parentNode == null ? 0 : parentNode.depth + 1;
 	}
 
 	public Node getParentNode() {
@@ -33,5 +33,9 @@ public class Node {
 
 	public int getDepth() {
 		return depth;
+	}
+
+	public String toString() {
+		return state.toString() + " " + pathCost + " " + operator;
 	}
 }

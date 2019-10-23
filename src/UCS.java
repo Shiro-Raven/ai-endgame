@@ -26,4 +26,10 @@ public class UCS implements SearchAlgorithm {
 		return generatedNodes.isEmpty();
 	}
 
+	@Override
+	public void printQueue() {
+		System.out.println(generatedNodes);
+	}
+	
+
 }
