@@ -146,7 +146,7 @@ public class Main {
 	public static void main(String[] args) throws FileNotFoundException {
 		String test = "5,5;" + "0,0;" + "4,4;" + "0,1,0,2,0,3,0,4,1,4,2,4;" + "2,0,3,0,3,1,4,0,4,1";
 
-		String sol = solve(test, "BF", false);
+		String sol = solve(test, "DF", false);
 		File solution = new File("solutionVisualization.txt");
 		PrintWriter out = new PrintWriter(solution);
 		out.println(sol);

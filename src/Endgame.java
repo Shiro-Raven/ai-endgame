@@ -117,7 +117,7 @@ public class Endgame extends GenericSearchProblem {
 
 		switch (appliedOperator) {
 		case "kill":
-			cost = warriorsCounterPreviousState * warriorKill;
+			cost += warriorsCounterPreviousState * warriorKill;
 			break;
 		case "collect":
 			cost += stoneCollect;
@@ -125,7 +125,7 @@ public class Endgame extends GenericSearchProblem {
 		case "down":
 		case "left":
 		case "right":
-			cost = warriorsCounterResultingState * warriorAttack;
+			cost += warriorsCounterResultingState * warriorAttack;
 			break;
 
 		default:
@@ -332,7 +332,7 @@ public class Endgame extends GenericSearchProblem {
 			}
 			visualizationResult.append("|\n");
 		}
-		return "Step " + currentNode.getDepth() + ":\n" + visualizationResult;
+		return "Step " + currentNode.getDepth() + ": damage="+currentNode.getPathCost()+" step performed is "+currentNode.getOperator()+"\n" + visualizationResult;
 	}
 
 	private void appendToGrid(String[][] grid, int x, int y, String value) {
