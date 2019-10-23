@@ -282,6 +282,13 @@ public class Endgame extends GenericSearchProblem {
     private boolean isInsideGrid(Point p) {
         return 0 <= p.x && p.x < rows && 0 <= p.y && p.y < columns;
     }
+    
 
+    /*
+     * Method to visualize a node
+     */
+    protected static void visualizeState(Node currentNode) {
+			
+	}
 
 }
