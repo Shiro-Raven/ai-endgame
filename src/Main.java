@@ -1,3 +1,6 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.*;
 
 public class Main {
@@ -42,15 +45,19 @@ public class Main {
 			finalNode = performGeneralSearch(problemInstance, algorithm);
 		} else {
 			finalNode = performIDS(problemInstance);
-		}
-		
-		System.out.println(finalNode);
-		Stack<Node> st = problemInstance.getFullSolution(finalNode);
-		while(!st.isEmpty()) {
-			problemInstance.visualizeState(st.pop());
-		}
+		}		
 
-		return null;
+		return visualizeSolution(finalNode, problemInstance);
+	}
+	
+	public static String visualizeSolution(Node goalNode, Endgame problemInstance) {
+		Stack<Node> st = Endgame.getFullSolution(goalNode);
+		StringBuilder visualization = new StringBuilder();
+		while(!st.isEmpty()) {
+			visualization.append(problemInstance.visualizeState(st.pop())+"\n");
+		}
+		return visualization.toString();
+		
 	}
 
 	static Endgame parser(String grid) {
@@ -103,8 +110,8 @@ public class Main {
 
 			Node currentNode = algorithm.dequeue();
 			
-			System.out.println("Examining: " + currentNode);
-			((Endgame) problem).visualizeState(currentNode);
+			//System.out.println("Examining: " + currentNode);
+			//((Endgame) problem).visualizeState(currentNode);
 
 			if (problem.isGoalState(currentNode))
 				return currentNode;
@@ -136,10 +143,14 @@ public class Main {
 		}
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws FileNotFoundException {
 		String test = "5,5;" + "0,0;" + "4,4;" + "0,1,0,2,0,3,0,4,1,4,2,4;" + "2,0,3,0,3,1,4,0,4,1";
 
 		String sol = solve(test, "BF", false);
+		File solution = new File("solutionVisualization.txt");
+		PrintWriter out = new PrintWriter(solution);
+		out.println(sol);
+		out.close();
 	}
 
 }
