@@ -33,4 +33,9 @@ public class Point implements Comparable<Point>, Cloneable {
     public int compareTo(Point o) {
         return x != o.x ? x - o.x : y - o.y;
     }
+    
+    @Override
+    public String toString(){
+    	return "{" + this.x + ", " + this.y + "}";
+    }
 }
