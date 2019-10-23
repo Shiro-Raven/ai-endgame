@@ -14,20 +14,20 @@ public abstract class GenericSearchProblem {
 	protected HashSet<State> visitedStates;
 
 	/*
-	 * getPathCost is the path cost function. Parameters: 1. parentNode: The parent
-	 * node. 2. appliedOperator: The operator/action that was used to reach the
-	 * current node. 3. resultingState: The state that resulted from applying the
-	 * operator to the parent node's state. Assumption: no other parameters are
-	 * needed for cost calculations; if there are, they would be provided by the
-	 * subclass.
+	 * getPathCost is the path cost function. Parameters: 1. parentNode: The
+	 * parent node. 2. appliedOperator: The operator/action that was used to
+	 * reach the current node. 3. resultingState: The state that resulted from
+	 * applying the operator to the parent node's state. Assumption: no other
+	 * parameters are needed for cost calculations; if there are, they would be
+	 * provided by the subclass.
 	 */
 	protected abstract int getPathCost(Node parentNode, String appliedOperator, State resultingState);
 
 	/*
-	 * Transition Function: applyOperator takes an operator and the current state as
-	 * inputs and returns the new state that results from applying the operator to
-	 * the current state. Subclasses of the GenericSearchProblem should implement
-	 * this method for the method expand to work.
+	 * Transition Function: applyOperator takes an operator and the current
+	 * state as inputs and returns the new state that results from applying the
+	 * operator to the current state. Subclasses of the GenericSearchProblem
+	 * should implement this method for the method expand to work.
 	 */
 	protected abstract State applyOperator(Node currentNode, String operator);
 
@@ -49,7 +49,7 @@ public abstract class GenericSearchProblem {
 		for (String operator : operators) {
 
 			State resultingState = applyOperator(currentNode, operator);
-			
+
 			if (resultingState == null)
 				continue;
 
@@ -62,8 +62,8 @@ public abstract class GenericSearchProblem {
 	}
 
 	/*
-	 * resetVisitedState is called before any algorithm is run to ensure that the
-	 * visited states HashSet is empty.
+	 * resetVisitedState is called before any algorithm is run to ensure that
+	 * the visited states HashSet is empty.
 	 */
 	protected void resetVisitedStates(int initialCapacity, float loadFactor) {
 		visitedStates = new HashSet<State>(initialCapacity, loadFactor);

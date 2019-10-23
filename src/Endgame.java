@@ -66,7 +66,7 @@ public class Endgame extends GenericSearchProblem {
         
         // A byte value of 00_111_111 where each zero represents one of the
         // stones.
-        this.initialState.setValue(stateContents.stones.label, (byte) (1 << 6) - 1);
+        this.initialState.setValue(stateContents.stones.label, (byte) ((1 << 6) - 1));
         
         // A bit representation of the alive warriors, 1 represents a warrior
         // that's not dead yet

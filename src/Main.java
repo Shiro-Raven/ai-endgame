@@ -4,9 +4,10 @@ public class Main {
 
 	public static String solve(String grid, String strategy, boolean visualize) {
 		Endgame problemInstance = parser(grid);
-		
+
 		SearchAlgorithm algorithm = null;
 		int heuristic;
+		
 		switch (strategy) {
 		case "BF":
 			algorithm = new BFS();
@@ -21,26 +22,30 @@ public class Main {
 			break;
 		case "GR1":
 		case "GR2":
-			heuristic = Character.getNumericValue(strategy.charAt(strategy.length() - 1)); 
-					
+			heuristic = Character.getNumericValue(strategy.charAt(strategy.length() - 1));
+
 			break;
 		case "AS1":
 		case "AS2":
 			heuristic = Character.getNumericValue(strategy.charAt(strategy.length() - 1));
-			
+
 			break;
 		default:
-			
+
 			break;
 		}
-		
-		if(!strategy.equals("ID")){
-			performGeneralSearch(problemInstance, algorithm);
-		} else {
-			performIDS(problemInstance);
-		}
 
-		// TODO: call resetVisitedNodes
+		problemInstance.resetVisitedStates((int) Math.pow(problemInstance.rows, 2), 0.7f); 
+		
+		Node finalNode;
+		if (!strategy.equals("ID")) {
+			finalNode = performGeneralSearch(problemInstance, algorithm);
+		} else {
+			finalNode = performIDS(problemInstance);
+		}
+		
+		System.out.println(finalNode);
+
 		return null;
 	}
 
@@ -58,7 +63,7 @@ public class Main {
 		iy = Integer.parseInt(st.nextToken());
 		tx = Integer.parseInt(st.nextToken());
 		ty = Integer.parseInt(st.nextToken());
-		
+
 		stones = stonesAndWarriors(variables[3],
 				warriorsIdx = new TreeMap<>((a, b) -> (a.x != b.x ? a.x - b.x : a.y - b.y)));
 		warriors = stonesAndWarriors(variables[4],
@@ -69,12 +74,14 @@ public class Main {
 
 	static Point[] stonesAndWarriors(String representation, TreeMap<Point, Integer> ptsToIdx) {
 		StringTokenizer st = new StringTokenizer(representation, ",");
-		Point[] pts = new Point[st.countTokens()];
+		Point[] pts = new Point[st.countTokens() / 2];
+		
 		for (int i = 0; i < pts.length; i++) {
 			int x = Integer.parseInt(st.nextToken()), y = Integer.parseInt(st.nextToken());
 			pts[i] = new Point(x, y);
 			ptsToIdx.put(new Point(x, y), i);
 		}
+
 		return pts;
 	}
 
@@ -120,6 +127,12 @@ public class Main {
 
 			limit++;
 		}
+	}
+
+	public static void main(String[] args) {
+		String test = "5,5;" + "0,0;" + "4,4;" + "0,1,0,2,0,3,0,4,1,4,2,4;" + "2,1,3,0,3,1,4,0,4,1";
+
+		String sol = solve(test, "BF", false);
 	}
 
 }
