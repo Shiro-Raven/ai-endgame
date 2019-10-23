@@ -65,9 +65,9 @@ public class Main {
 		ty = Integer.parseInt(st.nextToken());
 
 		stones = stonesAndWarriors(variables[3],
-				warriorsIdx = new TreeMap<>((a, b) -> (a.x != b.x ? a.x - b.x : a.y - b.y)));
-		warriors = stonesAndWarriors(variables[4],
 				stonesIdx = new TreeMap<>((a, b) -> (a.x != b.x ? a.x - b.x : a.y - b.y)));
+		warriors = stonesAndWarriors(variables[4],
+				warriorsIdx = new TreeMap<>((a, b) -> (a.x != b.x ? a.x - b.x : a.y - b.y)));
 
 		return new Endgame(n, m, ix, iy, tx, ty, stones, warriors, warriorsIdx, stonesIdx);
 	}
