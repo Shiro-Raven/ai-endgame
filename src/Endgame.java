@@ -293,7 +293,9 @@ public class Endgame extends GenericSearchProblem {
 		String[][] grid = new String[rows][columns];
 
 		// fill all with empty label E
-		Arrays.fill(grid, "E");
+		for (int i = 0; i < rows; i++)
+			for (int j = 0; j < columns; j++)
+				grid[i][j] = "E";
 
 		// add Thanos
 		appendToGrid(grid, thanosPos.x, thanosPos.y, "T");
@@ -324,7 +326,7 @@ public class Endgame extends GenericSearchProblem {
 			Integer warriorIdx = entry.getValue();
 
 			if (warriorsLeft.isAlive(warriorIdx))
-				appendToGrid(grid, location.x, location.y, "S");
+				appendToGrid(grid, location.x, location.y, "W");
 		}
 
 		// print the resulting visualization
