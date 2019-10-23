@@ -1,3 +1,5 @@
+import java.util.Arrays;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 
 public class Endgame extends GenericSearchProblem {
@@ -287,8 +289,61 @@ public class Endgame extends GenericSearchProblem {
     /*
      * Method to visualize a node
      */
-    protected static void visualizeState(Node currentNode) {
-			
+	protected void visualizeState(Node currentNode) {
+		String[][] grid = new String[rows][columns];
+
+		// fill all with empty label E
+		Arrays.fill(grid, "E");
+
+		// add Thanos
+		appendToGrid(grid, thanosPos.x, thanosPos.y, "T");
+
+		State currentState = currentNode.getState();
+
+		// add iron man
+		Point ironManLoc = (Point) currentState.getValue(stateContents.ironMan.label);
+
+		appendToGrid(grid, ironManLoc.x, ironManLoc.y, "I");
+
+		// add the stones
+		byte stonesLeft = (byte) currentState.getValue(stateContents.stones.label);
+
+		for (Entry<Point, Integer> entry : stonesIdx.entrySet()) {
+			Point location = entry.getKey();
+			Integer stoneIdx = entry.getValue();
+
+			if (!((stonesLeft & (1 << stoneIdx)) == 0))
+				appendToGrid(grid, location.x, location.y, "S");
+		}
+		
+		// add the warriors
+		Warriors warriorsLeft = (Warriors) currentState.getValue(stateContents.warriors.label);
+
+		for (Entry<Point, Integer> entry : warriorsIdx.entrySet()) {
+			Point location = entry.getKey();
+			Integer warriorIdx = entry.getValue();
+
+			if (warriorsLeft.isAlive(warriorIdx))
+				appendToGrid(grid, location.x, location.y, "S");
+		}
+
+		// print the resulting visualization
+		String visualizationResult = "";
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < columns; j++) {
+				visualizationResult += ("|\t" + grid[i][j] + "\t");
+			}
+			visualizationResult += "|\n";
+		}
+		System.out.println("Step " + currentNode.getDepth() + ":");
+		System.out.print(visualizationResult);
+	}
+
+	private void appendToGrid(String[][] grid, int x, int y, String value) {
+		if (grid[x][y] == "E")
+			grid[x][y] = value;
+		else
+			grid[x][y] += (", " + value);
 	}
 
 }
