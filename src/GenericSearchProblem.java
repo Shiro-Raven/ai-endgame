@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Stack;
 
 public abstract class GenericSearchProblem {
 
@@ -66,6 +67,23 @@ public abstract class GenericSearchProblem {
 	 */
 	protected void resetVisitedStates(int initialCapacity, float loadFactor) {
 		visitedStates = new HashSet<State>(initialCapacity, loadFactor);
+	}
+	
+	/*
+	 * Method to get the full solution to the problem
+	 * 
+	 */
+	protected static Stack<Node> getFullSolution(Node goalNode) {		
+		Stack<Node> solutionStack = new Stack<>();
+		
+		Node nodeToExamine = goalNode;
+		
+		while(nodeToExamine != null) {
+			solutionStack.push(nodeToExamine);
+			nodeToExamine = nodeToExamine.getParentNode();
+		}
+		
+		return solutionStack;
 	}
 
 }
