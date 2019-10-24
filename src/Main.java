@@ -171,6 +171,8 @@ public class Main {
 			if (result != null)
 				return result;
 
+			problem.resetVisitedStates();
+			
 			limit++;
 		}
 	}
