@@ -1,10 +1,12 @@
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Stack;
 import java.util.TreeSet;
 
 public abstract class GenericSearchProblem {
 
+	// counter to count the expanded nodes
+	long expandedNodesCounter;
+	
 	// the operators representing the allowed agent actions
 	protected String[] operators;
 
@@ -57,6 +59,9 @@ public abstract class GenericSearchProblem {
 
 			resultingNodes.add(new Node(resultingState, currentNode, resultingPathCost, operator));
 		}
+		
+		// the node was fully expanded
+		this.expandedNodesCounter++;
 
 		return resultingNodes;
 	}

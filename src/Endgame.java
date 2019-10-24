@@ -1,4 +1,3 @@
-import java.util.Arrays;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
@@ -69,6 +68,9 @@ public class Endgame extends GenericSearchProblem {
 		// that's not dead yet
 		Warriors warriorsBitSet = new Warriors(warriors.length);
 		this.initialState.setValue(stateContents.warriors.label, warriorsBitSet);
+		
+		// reset the number of expanded nodes
+		this.expandedNodesCounter = 0;
 
 	}
 

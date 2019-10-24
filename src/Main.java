@@ -47,7 +47,39 @@ public class Main {
 			finalNode = performIDS(problemInstance);
 		}		
 
-		return visualizeSolution(finalNode, problemInstance);
+		if(visualize)
+			System.out.println(visualizeSolution(finalNode, problemInstance));
+		
+		// construct the solution
+		return constructSolution(finalNode, problemInstance);
+		
+	}
+	
+	private static String constructSolution(Node finalNode, Endgame problemInstance) {
+
+		if (finalNode == null)
+			return "There is no solution.";
+
+		String resultingOutput = "";
+		Stack<Node> st = Endgame.getFullSolution(finalNode);
+
+		// add the actions to the plan
+		while (!st.isEmpty()) {
+			String currentOperator = st.pop().getOperator();
+			if (currentOperator != null)
+				resultingOutput += (currentOperator + ",");
+		}
+
+		// add snap to the plan
+		resultingOutput += "snap;";
+
+		// add the cost of the plan
+		resultingOutput += (finalNode.getPathCost() + ";");
+
+		// add the number of expanded nodes
+		resultingOutput += problemInstance.expandedNodesCounter;
+
+		return resultingOutput;
 	}
 	
 	public static String visualizeSolution(Node goalNode, Endgame problemInstance) {
@@ -146,8 +178,9 @@ public class Main {
 	public static void main(String[] args) throws FileNotFoundException {
 		String test = "5,5;" + "0,0;" + "4,4;" + "0,1,0,2,0,3,0,4,1,4,2,4;" + "2,0,3,0,3,1,4,0,4,1";
 
-		String sol = solve(test, "DF", false);
-		File solution = new File("solutionVisualization.txt");
+		String sol = solve(test, "ID", true);
+		System.out.println(sol);
+		File solution = new File("solution.txt");
 		PrintWriter out = new PrintWriter(solution);
 		out.println(sol);
 		out.close();
