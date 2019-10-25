@@ -38,10 +38,13 @@ public abstract class GenericSearchProblem {
 	 * isGoalState returns true if the current state is a goal state
 	 */
 	protected abstract boolean isGoalState(Node currentNode);
-
+	
 	/*
-	 * TODO: finish the implementation
+	 * evaluateHeuristic takes an input node and calculates the value of h(n).
+	 * The function h(n) is determined according the value of heuristicNum
 	 */
+	protected abstract int evaluateHeuristic(Node currentNode, int heuristicNum);
+
 	protected ArrayList<Node> expand(Node currentNode) {
 
 		ArrayList<Node> resultingNodes = new ArrayList<>();

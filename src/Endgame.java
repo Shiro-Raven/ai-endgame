@@ -37,11 +37,6 @@ public class Endgame extends GenericSearchProblem {
 
 	public Endgame(int n, int m, int ix, int iy, int tx, int ty, Point[] stones, Point[] warriors,
 			TreeMap<Point, Integer> warriorsIdx, TreeMap<Point, Integer> stonesIdx) {
-		if (stones.length != 6) {
-			System.err.println("Less than six stones!");
-			return;
-		}
-
 		rows = m;
 		columns = n;
 
@@ -51,11 +46,15 @@ public class Endgame extends GenericSearchProblem {
 		this.warriorsIdx = warriorsIdx;
 		this.stonesIdx = stonesIdx;
 
+		// Input Checks
+		if (!validateInput(ix, iy))
+			return;
+
 		this.operators = new String[] { "up", "down", "left", "right", "collect", "kill" };
 
 		/*
-		 * State consists of: 1. ironMan location. 2. Stones picked up or not. 3.
-		 * Warriors defeated or not. 4. Damage received so far.
+		 * State consists of: 1. ironMan location. 2. Stones picked up or not.
+		 * 3. Warriors defeated or not. 4. Damage received so far.
 		 */
 		this.initialState = new State();
 		this.initialState.setValue(stateContents.ironMan.label, new Point(ix, iy));
@@ -68,10 +67,53 @@ public class Endgame extends GenericSearchProblem {
 		// that's not dead yet
 		Warriors warriorsBitSet = new Warriors(warriors.length);
 		this.initialState.setValue(stateContents.warriors.label, warriorsBitSet);
-		
+
 		// reset the number of expanded nodes
 		this.expandedNodesCounter = 0;
 
+	}
+
+	private boolean validateInput(int ix, int iy) {
+		if (stonesIdx.size() != 6) {
+			System.err.println("Less than six stones OR Duplicate stone input!");
+			return false;
+		}
+
+		if (warriorsIdx.size() != warriors.length) {
+			System.err.println("Duplicate warrior input!");
+			return false;
+		}
+
+		for (Entry<Point, Integer> x : warriorsIdx.entrySet()) {
+			if (x.getKey().compareTo(thanosPos) == 0) {
+				System.err.println("Warrior and Thanos in same place!");
+				return false;
+			}
+
+			if (x.getKey().compareTo(new Point(ix, iy)) == 0) {
+				System.err.println("Warrior and Iron Man in same place!");
+				return false;
+			}
+
+			for (Entry<Point, Integer> y : stonesIdx.entrySet()) {
+				if (x.getKey().compareTo(y.getKey()) == 0) {
+					System.err.println("Warrior and Stone in same place!");
+					return false;
+				} else if (y.getKey().compareTo(thanosPos) == 0) {
+					System.err.println("Stone and Thanos in same place!");
+					return false;
+				} else if (y.getKey().compareTo(new Point(ix, iy)) == 0) {
+					System.err.println("Stone and Iron Man in same place!");
+					return false;
+				}
+			}
+		}
+		if (thanosPos.compareTo(new Point(ix, iy)) == 0) {
+			System.err.println("Thanos and Iron Man in same place!");
+			return false;
+		}
+
+		return true;
 	}
 
 	@Override
@@ -93,8 +135,8 @@ public class Endgame extends GenericSearchProblem {
 			int newX = ironManLoc.x + diffX[i], newY = ironManLoc.y + diffY[i];
 			Point adjPoint = new Point(newX, newY);
 
-			// kill requires a check on the previous state; other operators on the resulting
-			// one
+			// kill requires a check on the previous state; other operators on
+			// the resulting one
 			if (appliedOperator == "kill") {
 				if (isWarrior(parentNode.getState(), adjPoint)) {
 					warriorsCounterPreviousState++;
@@ -183,7 +225,8 @@ public class Endgame extends GenericSearchProblem {
 			Integer stoneIdx = stonesIdx.get(ironManLoc);
 			byte stonesLeft = (byte) currentState.getValue(stateContents.stones.label);
 
-			// Validation: Point doesn't contain a stone, or stone is already collected.
+			// Validation: Point doesn't contain a stone, or stone is already
+			// collected.
 			if ((stoneIdx == null) || ((stonesLeft & (1 << stoneIdx)) == 0))
 				return null;
 
@@ -241,7 +284,18 @@ public class Endgame extends GenericSearchProblem {
 		return (ironManLoc.compareTo(thanosPos) == 0) && (stones == 0) && (damage < 100);
 	}
 
-	/*-----------------------------------------------Utility methods--------------------------------------------------*/
+	@Override
+	protected int evaluateHeuristic(Node currentNode, int heuristicNum) {
+		if (heuristicNum == 1) {
+			return numOfAdjacentAliveWarriors(currentNode.getState());
+		} else if (heuristicNum == 2) {
+			return adjacentThanosDamage(currentNode.getState());
+		} else {
+			return -1;
+		}
+	}
+
+	/*-------------------------------Utility methods----------------------------------*/
 
 	private boolean isWarrior(State stateToExamine, Point locationToExamine) {
 		// retrieve warrior index
@@ -283,16 +337,54 @@ public class Endgame extends GenericSearchProblem {
 		return 0 <= p.x && p.x < rows && 0 <= p.y && p.y < columns;
 	}
 
+	private int numOfAdjacentAliveWarriors(State state) {
+		Point ironManLoc = (Point) state.getValue(stateContents.ironMan.label);
+
+		int counter = 0;
+		for (int i = 0; i < diffX.length; i++) {
+			int newX = ironManLoc.x + diffX[i], newY = ironManLoc.y + diffY[i];
+			Point adjPoint = new Point(newX, newY);
+
+			if (isWarrior(state, adjPoint)) {
+				counter++;
+			}
+		}
+
+		return counter * warriorAttack;
+	}
+
+	private int adjacentThanosDamage(State state) {
+		Point ironManLoc = (Point) state.getValue(stateContents.ironMan.label);
+
+		boolean isThere = false;
+
+		for (int i = 0; i < diffX.length; i++) {
+			int newX = ironManLoc.x + diffX[i], newY = ironManLoc.y + diffY[i];
+			Point adjPoint = new Point(newX, newY);
+
+			if (adjPoint.compareTo(thanosPos) == 0) {
+				isThere = true;
+				break;
+			}
+		}
+
+		return isThere ? thanosAttack : 0;
+	}
+
+	/*--------------------------------------------------------------------------------*/
+
 	/*
 	 * Method to visualize a node
 	 */
+	final static String emptyCell = "-";
+
 	protected String visualizeState(Node currentNode) {
 		String[][] grid = new String[rows][columns];
 
-		// fill all with empty label E
+		// fill all with empty label
 		for (int i = 0; i < rows; i++)
 			for (int j = 0; j < columns; j++)
-				grid[i][j] = "E";
+				grid[i][j] = emptyCell;
 
 		// add Thanos
 		appendToGrid(grid, thanosPos.x, thanosPos.y, "T");
@@ -334,11 +426,12 @@ public class Endgame extends GenericSearchProblem {
 			}
 			visualizationResult.append("|\n");
 		}
-		return "Step " + currentNode.getDepth() + ": damage="+currentNode.getPathCost()+" step performed is "+currentNode.getOperator()+"\n" + visualizationResult;
+		return "Step #" + currentNode.getDepth() + ": damage = " + currentNode.getPathCost() + ", step performed is: "
+				+ currentNode.getOperator() + "\n" + visualizationResult;
 	}
 
 	private void appendToGrid(String[][] grid, int x, int y, String value) {
-		if (grid[x][y] == "E")
+		if (grid[x][y] == emptyCell)
 			grid[x][y] = value;
 		else
 			grid[x][y] += (", " + value);

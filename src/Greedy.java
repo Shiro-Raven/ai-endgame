@@ -1,13 +1,24 @@
 import java.util.ArrayList;
 import java.util.PriorityQueue;
 
-public class UCS implements SearchAlgorithm {
+public class Greedy implements SearchAlgorithm {
 
+	private int heuristic;
 	PriorityQueue<Node> generatedNodes;
+	GenericSearchProblem problemInstance;
+
+	public Greedy(int heuristic, GenericSearchProblem problem) {
+		if (heuristic == 1 || heuristic == 2) {
+			this.heuristic = heuristic;
+		} else {
+			System.err.println("Invalid heuristic");
+		}
+		this.problemInstance = problem;
+	}
 
 	@Override
 	public void makeQueue(Node initialState) {
-		generatedNodes = new PriorityQueue<>((nodeA, nodeB) -> nodeA.getPathCost() - nodeB.getPathCost());
+		generatedNodes = new PriorityQueue<>((nodeA, nodeB) -> problemInstance.evaluateHeuristic(nodeA, heuristic) - problemInstance.evaluateHeuristic(nodeB, heuristic));
 		generatedNodes.add(initialState);
 	}
 
