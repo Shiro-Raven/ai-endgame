@@ -1,4 +1,4 @@
-public class Test {
+public class DevTests {
 
 	public static void main(String[] args) {
 		testStateComparable();
