@@ -3,26 +3,29 @@ import java.util.TreeMap;
 
 public class Endgame extends GenericSearchProblem {
 
-	/*-------------------------------------------------Global Values--------------------------------------------------*/
+	/*---------------------------------------Global Values----------------------------------------*/
 	Point thanosPos;
 	Point[] warriors;
 	Point[] stoneLocations;
 	TreeMap<Point, Integer> warriorsIdx;
 	TreeMap<Point, Integer> stonesIdx;
 
-	/*-----------------------------------------------Grid Boundaries--------------------------------------------------*/
+	/*-------------------------------------Grid Boundaries----------------------------------------*/
 	int rows;
 	int columns;
 
-	/*--------------------------------------------------Constants-----------------------------------------------------*/
+	/*----------------------------------------Constants-------------------------------------------*/
 	private static final int thanosAttack = 5;
 	private static final int warriorAttack = 1;
 	private static final int warriorKill = 2;
 	private static final int stoneCollect = 3;
-	// Adjacent cells
+
+	// Adjacent cells offsets
 	private static int[] diffX = { 0, 0, 1, -1 };
 	private static int[] diffY = { -1, 1, 0, 0 };
 
+	// Enum used to ensure consistency when handling the state read/write
+	// operations
 	enum stateContents {
 		ironMan("ironMan"), stones("stones"), warriors("warriors");
 
@@ -33,8 +36,7 @@ public class Endgame extends GenericSearchProblem {
 		}
 	}
 
-	/*---------------------------------------------------Class--------------------------------------------------------*/
-
+	/*-----------------------------------------Class----------------------------------------------*/
 	public Endgame(int n, int m, int ix, int iy, int tx, int ty, Point[] stones, Point[] warriors,
 			TreeMap<Point, Integer> warriorsIdx, TreeMap<Point, Integer> stonesIdx) {
 		rows = m;
@@ -50,17 +52,18 @@ public class Endgame extends GenericSearchProblem {
 		if (!validateInput(ix, iy))
 			return;
 
+		// List of all allowed operators for this search problem
 		this.operators = new String[] { "up", "down", "left", "right", "collect", "kill" };
 
 		/*
 		 * State consists of: 1. ironMan location. 2. Stones picked up or not.
-		 * 3. Warriors defeated or not. 4. Damage received so far.
+		 * 3. Warriors defeated or not.
 		 */
 		this.initialState = new State();
 		this.initialState.setValue(stateContents.ironMan.label, new Point(ix, iy));
 
-		// A byte value of 00_111_111 where each zero represents one of the
-		// stones.
+		// A byte value of 00_111_111 where each one represents one of the
+		// remaining stones in the world.
 		this.initialState.setValue(stateContents.stones.label, (byte) ((1 << 6) - 1));
 
 		// A bit representation of the alive warriors, 1 represents a warrior
@@ -108,6 +111,7 @@ public class Endgame extends GenericSearchProblem {
 				}
 			}
 		}
+
 		if (thanosPos.compareTo(new Point(ix, iy)) == 0) {
 			System.err.println("Thanos and Iron Man in same place!");
 			return false;
@@ -118,8 +122,7 @@ public class Endgame extends GenericSearchProblem {
 
 	@Override
 	/*
-	 * Calculates path cost and returns it. Assigns the path cost to the damage
-	 * variable of the state.
+	 * Calculates path cost and returns it.
 	 */
 	protected int getPathCost(Node parentNode, String appliedOperator, State resultingState) {
 		int cost = 0;
@@ -131,6 +134,8 @@ public class Endgame extends GenericSearchProblem {
 		int warriorsCounterResultingState = 0;
 		boolean thanosPresent = false;
 
+		// A loop for checking adjacent locations for the presence of warriors
+		// or Thanos
 		for (int i = 0; i < diffX.length; i++) {
 			int newX = ironManLoc.x + diffX[i], newY = ironManLoc.y + diffY[i];
 			Point adjPoint = new Point(newX, newY);
@@ -157,6 +162,7 @@ public class Endgame extends GenericSearchProblem {
 		if (thanosPos.compareTo(ironManLoc) == 0)
 			thanosPresent = true;
 
+		// Adding the damage to the cost
 		cost += thanosPresent ? thanosAttack : 0;
 
 		switch (appliedOperator) {
@@ -186,14 +192,16 @@ public class Endgame extends GenericSearchProblem {
 
 		// return no results if the currentState has damage >= 100
 		int damageInCurrentState = currentNode.getPathCost();
-
 		if (damageInCurrentState >= 100) {
 			return null;
 		}
 
 		State newState = new State();
 
-		int changedField = 0;
+		// Pointer to indicate which of the fields in the state got changed;
+		// this is needed to optimise the space complexity
+		int changedField = -1;
+		
 		Point ironManLoc = (Point) currentState.getValue(stateContents.ironMan.label);
 
 		switch (operator) {
@@ -204,7 +212,7 @@ public class Endgame extends GenericSearchProblem {
 			Point newLoc = new Point(ironManLoc);
 			newLoc.move(operator);
 
-			// Validation: Point is outside the grid.
+			// Validation: Point is inside the grid.
 			if (!isInsideGrid(newLoc))
 				return null;
 
@@ -230,6 +238,7 @@ public class Endgame extends GenericSearchProblem {
 			if ((stoneIdx == null) || ((stonesLeft & (1 << stoneIdx)) == 0))
 				return null;
 
+			// XOR the respective stone bit to zero, to designate it as collected
 			stonesLeft ^= (byte) (1 << stoneIdx);
 			newState.setValue(stateContents.stones.label, stonesLeft);
 			changedField = 1;
@@ -239,6 +248,7 @@ public class Endgame extends GenericSearchProblem {
 			Warriors newWarriors = new Warriors(oldWarriors);
 
 			boolean warriorsDead = false;
+			// Loop over all adjacent cells and see if they have living warriors in them
 			for (int i = 0; i < diffX.length; i++) {
 				Integer curr = warriorsIdx.get(new Point(ironManLoc.x + diffX[i], ironManLoc.y + diffY[i]));
 
@@ -258,6 +268,9 @@ public class Endgame extends GenericSearchProblem {
 		default:
 			return null;
 		}
+
+		if (changedField == -1)
+			System.err.println("Something is wrong here");
 
 		// Copy the unchanged fields
 		for (int i = 0; i < stateContents.values().length; i++) {
@@ -286,13 +299,17 @@ public class Endgame extends GenericSearchProblem {
 
 	@Override
 	protected int evaluateHeuristic(Node currentNode, int heuristicNum) {
-		if (heuristicNum == 1) {
-			return numOfAdjacentAliveWarriors(currentNode.getState());
-		} else if (heuristicNum == 2) {
-			return adjacentThanosDamage(currentNode.getState());
-		} else {
-			return -1;
+		int value;
+		switch (heuristicNum) {
+		case 1:
+			value = numOfAdjacentAliveWarriors(currentNode.getState());
+		case 2:
+			value = adjacentThanosDamage(currentNode.getState());
+		default:
+			value = -1;
 		}
+
+		return value;
 	}
 
 	/*-------------------------------Utility methods----------------------------------*/

@@ -13,12 +13,17 @@ public class AStar implements SearchAlgorithm {
 		} else {
 			System.err.println("Invalid heuristic");
 		}
+		
 		this.problemInstance = problem;
 	}
 
 	@Override
 	public void makeQueue(Node initialState) {
-		generatedNodes = new PriorityQueue<>((nodeA, nodeB) -> (problemInstance.evaluateHeuristic(nodeA, heuristic) + nodeA.getPathCost()) - (problemInstance.evaluateHeuristic(nodeB, heuristic) + nodeB.getPathCost()));
+		// The Priority Queue assigns priority according to the f(n) function
+		// f(n) = h(n) + g(n)
+		generatedNodes = new PriorityQueue<>(
+				(nodeA, nodeB) -> (problemInstance.evaluateHeuristic(nodeA, heuristic) + nodeA.getPathCost())
+						- (problemInstance.evaluateHeuristic(nodeB, heuristic) + nodeB.getPathCost()));
 		generatedNodes.add(initialState);
 	}
 
