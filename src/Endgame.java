@@ -70,7 +70,6 @@ public class Endgame extends GenericSearchProblem {
 		// that's not dead yet
 		Warriors warriorsBitSet = new Warriors(warriors.length);
 		this.initialState.setValue(stateContents.warriors.label, warriorsBitSet);
-
 		// reset the number of expanded nodes
 		this.expandedNodesCounter = 0;
 
@@ -376,11 +375,7 @@ public class Endgame extends GenericSearchProblem {
 		// check if the warrior is alive
 		Warriors warriorsInState = (Warriors) stateToExamine.getValue(stateContents.warriors.label);
 
-		if (warriorsInState.isAlive(warriorIndex)) {
-			return true;
-		} else {
-			return false;
-		}
+		return  (warriorsInState.isAlive(warriorIndex));
 	}
 
 	@SuppressWarnings("unused")
@@ -395,10 +390,7 @@ public class Endgame extends GenericSearchProblem {
 		// check if the stone has not been already picked up
 		byte stonesLeft = (byte) stateToExamine.getValue(stateContents.stones.label);
 
-		if ((stonesLeft & (1 << stoneIndex)) == 0)
-			return false;
-		else
-			return true;
+		return ((stonesLeft & (1 << stoneIndex)) != 0);
 	}
 
 	private boolean isInsideGrid(Point p) {

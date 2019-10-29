@@ -35,8 +35,8 @@ public class Warriors implements Comparable<Warriors> {
 
 	@Override
 	public int compareTo(Warriors w) {
-		int nextIdx = Math.max(bitMask.length(), w.bitMask.length()) - 1;
-		while (nextIdx > 0) {
+		int nextIdx = Math.max(bitMask.length(), w.bitMask.length())-1;
+		while (nextIdx >= 0) {
 			int onBit1 = bitMask.previousSetBit(nextIdx);
 			int onBit2 = w.bitMask.previousSetBit(nextIdx);
 			if (onBit1 == onBit2) {

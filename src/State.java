@@ -15,7 +15,7 @@ public class State implements Comparable<State> {
 	public void setValue(String key, Object value) {
 		contents.put(key, value);
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		return this.compareTo((State) obj) == 0;
@@ -24,21 +24,21 @@ public class State implements Comparable<State> {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public int compareTo(State state) {
 		HashMap<String, Object> otherContents = state.contents;
-		
+
 		if (otherContents.size() != contents.size()) {
 			System.err.println("States should have the same attributes");
 			return 0;
 		}
-		
+
 		for (Entry<String, Object> entry : contents.entrySet()) {
 			try {
 				Comparable attribute = (Comparable) entry.getValue();
 				Comparable otherAttribute = (Comparable) otherContents.get(entry.getKey());
-				
+
 				if (attribute.compareTo(otherAttribute) == 0) {
 					continue;
 				}
-				
+
 				return attribute.compareTo(otherAttribute);
 			} catch (Exception _e) {
 				System.err.println("State attributes should implement Comparable");
@@ -48,9 +48,14 @@ public class State implements Comparable<State> {
 
 		return 0;
 	}
-	
+
 	public String toString() {
 		return contents.toString();
 	}
-	
+
+	@Override
+	public int hashCode() {
+		return toString().hashCode();
+	}
+
 }

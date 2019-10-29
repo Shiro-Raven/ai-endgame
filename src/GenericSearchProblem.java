@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Stack;
 import java.util.TreeSet;
 
@@ -14,7 +15,7 @@ public abstract class GenericSearchProblem {
 	protected State initialState;
 
 	// a set of visited states
-	protected TreeSet<State> visitedStates;
+	protected HashSet<State> visitedStates;
 
 	/*
 	 * getPathCost is the path cost function. Parameters: 1. parentNode: The
@@ -74,7 +75,7 @@ public abstract class GenericSearchProblem {
 	 * the visited states HashSet is empty.
 	 */
 	protected void resetVisitedStates() {
-		visitedStates = new TreeSet<State>();
+		visitedStates = new HashSet<State>();
 	}
 	
 	/*

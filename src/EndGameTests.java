@@ -316,7 +316,6 @@ public class EndGameTests {
 	@Test(timeout = 70000)
 	public void testd10() {
 		String solution = Main.solve(grid14, "GR1", false);
-
 		assertTrue("The output actions do not lead to a goal state.", applyPlan(grid14, solution));
 	}
 
