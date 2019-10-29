@@ -296,20 +296,71 @@ public class Endgame extends GenericSearchProblem {
 
 		return (ironManLoc.compareTo(thanosPos) == 0) && (stones == 0) && (damage < 100);
 	}
-
+	
+	/*------------------------------Heuristics---------------------------------------*/
 	@Override
 	protected int evaluateHeuristic(Node currentNode, int heuristicNum) {
 		int value;
 		switch (heuristicNum) {
 		case 1:
-			value = numOfAdjacentAliveWarriors(currentNode.getState());
+			value = getOneMoveWarriorDamage(currentNode);
 		case 2:
-			value = adjacentThanosDamage(currentNode.getState());
+			value = getRemainingStonesDamage(currentNode);
 		default:
 			value = -1;
 		}
 
 		return value;
+	}
+	
+	private int getOneMoveWarriorDamage(Node currentNode) {
+		// satisfy the centering property
+		if (isGoalState(currentNode))
+			return 0;
+		else {
+			// calculate the cost of one future step with respect to warrior damage
+			State currentState = currentNode.getState();
+
+			Point ironManLoc = (Point) currentState.getValue(stateContents.ironMan.label);
+
+			int[] futureMoveCosts = { 0, 0, 0, 0 };
+
+			// calculate future move costs
+			for (int i = 0; i < diffX.length; i++) {
+				// there are at max 4 possible locations where ironMan can move
+				// these locations are stored in newCentralCell
+				int newCentralX = ironManLoc.x + diffX[i], newCentralY = ironManLoc.y + diffY[i];
+				Point newCentralCell = new Point(newCentralX, newCentralY);
+
+				// check the 4 cells adjacent to the central cell for warriors
+				for (int j = 0; j < diffX.length; j++) {
+					int adjPointX = newCentralCell.x + diffX[j], adjPointY = newCentralCell.y + diffY[j];
+					Point adjPoint = new Point(adjPointX, adjPointY);
+
+					if (isWarrior(currentState, adjPoint))
+						futureMoveCosts[i]++;
+				}
+			}
+
+			// find the minimum future move cost and return it
+			int minimumMoveCost = futureMoveCosts[0];
+			for (int i = 1; i < futureMoveCosts.length; i++) {
+				if (futureMoveCosts[i] < minimumMoveCost)
+					minimumMoveCost = futureMoveCosts[i];
+			}
+
+			return minimumMoveCost;
+		}
+	}
+
+	private int getRemainingStonesDamage(Node currentNode) {
+
+		State currentState = currentNode.getState();
+
+		byte stonesLeft = (byte) currentState.getValue(stateContents.stones.label);
+
+		// count the number of stones left and multiply it by damage
+		return 3 * Integer.bitCount(stonesLeft);
 	}
 
 	/*-------------------------------Utility methods----------------------------------*/
@@ -388,7 +439,7 @@ public class Endgame extends GenericSearchProblem {
 		return isThere ? thanosAttack : 0;
 	}
 
-	/*--------------------------------------------------------------------------------*/
+	/*------------------------------Visualization---------------------------------------*/
 
 	/*
 	 * Method to visualize a node
