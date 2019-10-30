@@ -53,7 +53,7 @@ public class Endgame extends GenericSearchProblem {
 			return;
 
 		// List of all allowed operators for this search problem
-		this.operators = new String[] { "up", "down", "left", "right", "collect", "kill" };
+		this.operators = new String[] { "collect", "up", "down", "left", "right", "kill" };
 
 		/*
 		 * State consists of: 1. ironMan location. 2. Stones picked up or not.
@@ -303,10 +303,13 @@ public class Endgame extends GenericSearchProblem {
 		switch (heuristicNum) {
 		case 1:
 			value = getOneMoveWarriorDamage(currentNode);
+			break;
 		case 2:
 			value = getRemainingStonesDamage(currentNode);
+			break;
 		default:
 			value = -1;
+			break;
 		}
 
 		return value;
