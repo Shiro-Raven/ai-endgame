@@ -302,7 +302,7 @@ public class Endgame extends GenericSearchProblem {
 		int value;
 		switch (heuristicNum) {
 		case 1:
-			value = getOneMoveWarriorDamage(currentNode);
+			value = getOneMoveWarriorDamage(currentNode) + getRemainingStonesDamage(currentNode);
 			break;
 		case 2:
 			value = getRemainingStonesDamage(currentNode);
