@@ -87,31 +87,31 @@ public class Endgame extends GenericSearchProblem {
 		}
 
 		for (Entry<Point, Integer> x : warriorsIdx.entrySet()) {
-			if (x.getKey().compareTo(thanosPos) == 0) {
+			if (x.getKey().equals(thanosPos)) {
 				System.err.println("Warrior and Thanos in same place!");
 				return false;
 			}
 
-			if (x.getKey().compareTo(new Point(ix, iy)) == 0) {
+			if (x.getKey().equals(new Point(ix, iy))) {
 				System.err.println("Warrior and Iron Man in same place!");
 				return false;
 			}
 
 			for (Entry<Point, Integer> y : stonesIdx.entrySet()) {
-				if (x.getKey().compareTo(y.getKey()) == 0) {
+				if (x.getKey().equals(y.getKey())) {
 					System.err.println("Warrior and Stone in same place!");
 					return false;
-				} else if (y.getKey().compareTo(thanosPos) == 0) {
+				} else if (y.getKey().equals(thanosPos)) {
 					System.err.println("Stone and Thanos in same place!");
 					return false;
-				} else if (y.getKey().compareTo(new Point(ix, iy)) == 0) {
+				} else if (y.getKey().equals(new Point(ix, iy))) {
 					System.err.println("Stone and Iron Man in same place!");
 					return false;
 				}
 			}
 		}
 
-		if (thanosPos.compareTo(new Point(ix, iy)) == 0) {
+		if (thanosPos.equals(new Point(ix, iy))) {
 			System.err.println("Thanos and Iron Man in same place!");
 			return false;
 		}
@@ -152,13 +152,13 @@ public class Endgame extends GenericSearchProblem {
 			}
 
 			// Thanos is adjacent to iron man
-			if (thanosPos.compareTo(adjPoint) == 0) {
+			if (thanosPos.equals(adjPoint)) {
 				thanosPresent = true;
 			}
 		}
 
 		// Thanos is in the same location as Iron Man
-		if (thanosPos.compareTo(ironManLoc) == 0)
+		if (thanosPos.equals(ironManLoc))
 			thanosPresent = true;
 
 		// Adding the damage to the cost
@@ -216,7 +216,7 @@ public class Endgame extends GenericSearchProblem {
 				return null;
 
 			// Validation: Can't move to Thanos cell if not all stones collected
-			if ((newLoc.compareTo(thanosPos) == 0) && ((byte) currentState.getValue(stateContents.stones.label) != 0))
+			if ((newLoc.equals(thanosPos)) && ((byte) currentState.getValue(stateContents.stones.label) != 0))
 				return null;
 
 			// Validation: Can't move to cell with ALIVE warrior
@@ -293,7 +293,7 @@ public class Endgame extends GenericSearchProblem {
 		Byte stones = (Byte) currentState.getValue(stateContents.stones.label);
 		int damage = currentNode.getPathCost();
 
-		return (ironManLoc.compareTo(thanosPos) == 0) && (stones == 0) && (damage < 100);
+		return (ironManLoc.equals(thanosPos)) && (stones == 0) && (damage < 100);
 	}
 	
 	/*------------------------------Heuristics---------------------------------------*/
@@ -422,7 +422,7 @@ public class Endgame extends GenericSearchProblem {
 			int newX = ironManLoc.x + diffX[i], newY = ironManLoc.y + diffY[i];
 			Point adjPoint = new Point(newX, newY);
 
-			if (adjPoint.compareTo(thanosPos) == 0) {
+			if (adjPoint.equals(thanosPos)) {
 				isThere = true;
 				break;
 			}

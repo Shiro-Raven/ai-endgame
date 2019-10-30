@@ -18,7 +18,22 @@ public class State implements Comparable<State> {
 
 	@Override
 	public boolean equals(Object obj) {
-		return this.compareTo((State) obj) == 0;
+		State otherState = (State) obj;
+		
+		if (otherState.contents.size() != this.contents.size()) {
+			System.err.println("States should have the same attributes");
+			return false;
+		}
+		
+		for (Entry<String, Object> entry : this.contents.entrySet()) {
+			Object attribute = entry.getValue();
+			Object otherAttribute = otherState.contents.get(entry.getKey());
+			
+			if(!attribute.equals(otherAttribute))
+				return false;
+		}
+		
+		return true;
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })

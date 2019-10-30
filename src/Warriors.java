@@ -47,5 +47,11 @@ public class Warriors implements Comparable<Warriors> {
 		}
 		return 0;
 	}
+	
+    @Override
+	public boolean equals(Object obj) {
+		Warriors otherWarriors = (Warriors) obj;
+    	return otherWarriors.bitMask.equals(this.bitMask);
+	}
 
 }

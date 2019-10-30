@@ -35,6 +35,12 @@ public class Point implements Comparable<Point>, Cloneable {
     }
     
     @Override
+	public boolean equals(Object obj) {
+		Point otherPoint = (Point) obj;
+    	return (otherPoint.x == this.x) && (otherPoint.y == this.y);
+	}
+    
+    @Override
     public String toString(){
     	return "{" + this.x + ", " + this.y + "}";
     }
