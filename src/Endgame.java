@@ -403,40 +403,6 @@ public class Endgame extends GenericSearchProblem {
 		return 0 <= p.x && p.x < rows && 0 <= p.y && p.y < columns;
 	}
 
-	private int numOfAdjacentAliveWarriors(State state) {
-		Point ironManLoc = (Point) state.getValue(stateContents.ironMan.label);
-
-		int counter = 0;
-		for (int i = 0; i < diffX.length; i++) {
-			int newX = ironManLoc.x + diffX[i], newY = ironManLoc.y + diffY[i];
-			Point adjPoint = new Point(newX, newY);
-
-			if (isWarrior(state, adjPoint)) {
-				counter++;
-			}
-		}
-
-		return counter * warriorAttack;
-	}
-
-	private int adjacentThanosDamage(State state) {
-		Point ironManLoc = (Point) state.getValue(stateContents.ironMan.label);
-
-		boolean isThere = false;
-
-		for (int i = 0; i < diffX.length; i++) {
-			int newX = ironManLoc.x + diffX[i], newY = ironManLoc.y + diffY[i];
-			Point adjPoint = new Point(newX, newY);
-
-			if (adjPoint.equals(thanosPos)) {
-				isThere = true;
-				break;
-			}
-		}
-
-		return isThere ? thanosAttack : 0;
-	}
-
 	/*------------------------------Visualization---------------------------------------*/
 
 	/*
