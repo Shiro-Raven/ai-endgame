@@ -72,6 +72,9 @@ public class Endgame extends GenericSearchProblem {
 		this.initialState.setValue(stateContents.warriors.label, warriorsBitSet);
 		// reset the number of expanded nodes
 		this.expandedNodesCounter = 0;
+		
+		// reset the visited states HashSet and add the initial state to it
+		this.resetVisitedStates();
 
 	}
 

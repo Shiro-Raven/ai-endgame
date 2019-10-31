@@ -50,13 +50,14 @@ public abstract class GenericSearchProblem {
 
 		ArrayList<Node> resultingNodes = new ArrayList<>();
 
-		if (!visitedStates.add(currentNode.getState()))
-			return resultingNodes;
-
 		for (String operator : operators) {
 
 			State resultingState = applyOperator(currentNode, operator);
+			
 			if (resultingState == null)
+				continue;
+			
+			if(!visitedStates.add(resultingState))
 				continue;
 
 			int resultingPathCost = getPathCost(currentNode, operator, resultingState);
@@ -76,6 +77,9 @@ public abstract class GenericSearchProblem {
 	 */
 	protected void resetVisitedStates() {
 		visitedStates = new HashSet<State>();
+		
+		// add the initial state to the visited states
+		visitedStates.add(initialState);
 	}
 	
 	/*
