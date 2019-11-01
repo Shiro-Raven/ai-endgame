@@ -56,8 +56,8 @@ public class Endgame extends GenericSearchProblem {
 		this.operators = new String[] { "collect", "up", "down", "left", "right", "kill" };
 
 		/*
-		 * State consists of: 1. ironMan location. 2. Stones picked up or not.
-		 * 3. Warriors defeated or not.
+		 * State consists of: 1. ironMan location. 2. Stones picked up or not. 3.
+		 * Warriors defeated or not.
 		 */
 		this.initialState = new State();
 		this.initialState.setValue(stateContents.ironMan.label, new Point(ix, iy));
@@ -72,10 +72,6 @@ public class Endgame extends GenericSearchProblem {
 		this.initialState.setValue(stateContents.warriors.label, warriorsBitSet);
 		// reset the number of expanded nodes
 		this.expandedNodesCounter = 0;
-		
-		// reset the visited states HashSet and add the initial state to it
-		this.resetVisitedStates();
-
 	}
 
 	private boolean validateInput(int ix, int iy) {
@@ -203,7 +199,7 @@ public class Endgame extends GenericSearchProblem {
 		// Pointer to indicate which of the fields in the state got changed;
 		// this is needed to optimise the space complexity
 		int changedField = -1;
-		
+
 		Point ironManLoc = (Point) currentState.getValue(stateContents.ironMan.label);
 
 		switch (operator) {
@@ -298,7 +294,7 @@ public class Endgame extends GenericSearchProblem {
 
 		return (ironManLoc.equals(thanosPos)) && (stones == 0) && (damage < 100);
 	}
-	
+
 	/*------------------------------Heuristics---------------------------------------*/
 	@Override
 	protected int evaluateHeuristic(Node currentNode, int heuristicNum) {
@@ -317,7 +313,7 @@ public class Endgame extends GenericSearchProblem {
 
 		return value;
 	}
-	
+
 	private int getOneMoveWarriorDamage(Node currentNode) {
 		// satisfy the centering property
 		if (isGoalState(currentNode))
@@ -381,7 +377,7 @@ public class Endgame extends GenericSearchProblem {
 		// check if the warrior is alive
 		Warriors warriorsInState = (Warriors) stateToExamine.getValue(stateContents.warriors.label);
 
-		return  (warriorsInState.isAlive(warriorIndex));
+		return (warriorsInState.isAlive(warriorIndex));
 	}
 
 	@SuppressWarnings("unused")
