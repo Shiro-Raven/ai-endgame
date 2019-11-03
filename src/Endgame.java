@@ -5,8 +5,6 @@ public class Endgame extends GenericSearchProblem {
 
 	/*---------------------------------------Global Values----------------------------------------*/
 	Point thanosPos;
-	Point[] warriors;
-	Point[] stoneLocations;
 	TreeMap<Point, Integer> warriorsIdx;
 	TreeMap<Point, Integer> stonesIdx;
 
@@ -43,13 +41,11 @@ public class Endgame extends GenericSearchProblem {
 		columns = n;
 
 		this.thanosPos = new Point(tx, ty);
-		this.warriors = warriors;
-		this.stoneLocations = stones;
 		this.warriorsIdx = warriorsIdx;
 		this.stonesIdx = stonesIdx;
 
 		// Input Checks
-		if (!validateInput(ix, iy))
+		if (!validateInput(ix, iy, warriors.length))
 			return;
 
 		// List of all allowed operators for this search problem
@@ -74,13 +70,13 @@ public class Endgame extends GenericSearchProblem {
 		this.expandedNodesCounter = 0;
 	}
 
-	private boolean validateInput(int ix, int iy) {
+	private boolean validateInput(int ix, int iy, int numOfWarriors) {
 		if (stonesIdx.size() != 6) {
 			System.err.println("Less than six stones OR Duplicate stone input!");
 			return false;
 		}
 
-		if (warriorsIdx.size() != warriors.length) {
+		if (warriorsIdx.size() != numOfWarriors) {
 			System.err.println("Duplicate warrior input!");
 			return false;
 		}
@@ -298,6 +294,10 @@ public class Endgame extends GenericSearchProblem {
 	/*------------------------------Heuristics---------------------------------------*/
 	@Override
 	protected int evaluateHeuristic(Node currentNode, int heuristicNum) {
+		if(currentNode.getHeuristicCost() != null) {
+			return currentNode.getHeuristicCost();
+		}
+		
 		int value;
 		switch (heuristicNum) {
 		case 1:
@@ -310,6 +310,8 @@ public class Endgame extends GenericSearchProblem {
 			value = -1;
 			break;
 		}
+		
+		currentNode.setHeuristicCost(value);
 
 		return value;
 	}

@@ -4,6 +4,8 @@ public class Node {
 	private int pathCost;
 	private String operator;
 
+	private Integer heuristicCost;
+	
 	private int depth;
 
 	public Node(State state, Node parentNode, int pathCost, String operator) {
@@ -33,6 +35,14 @@ public class Node {
 
 	public int getDepth() {
 		return depth;
+	}
+	
+	public Integer getHeuristicCost() {
+		return heuristicCost;
+	}
+	
+	public void setHeuristicCost(int hCost) {
+		heuristicCost = new Integer(hCost);
 	}
 
 	public String toString() {
