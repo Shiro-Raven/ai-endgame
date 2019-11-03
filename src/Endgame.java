@@ -35,8 +35,8 @@ public class Endgame extends GenericSearchProblem {
 	}
 
 	/*-----------------------------------------Class----------------------------------------------*/
-	public Endgame(int n, int m, int ix, int iy, int tx, int ty, Point[] stones, Point[] warriors,
-			TreeMap<Point, Integer> warriorsIdx, TreeMap<Point, Integer> stonesIdx) {
+	public Endgame(int n, int m, int ix, int iy, int tx, int ty, TreeMap<Point, Integer> warriorsIdx,
+			TreeMap<Point, Integer> stonesIdx, int noOfWarriors) {
 		rows = m;
 		columns = n;
 
@@ -45,7 +45,7 @@ public class Endgame extends GenericSearchProblem {
 		this.stonesIdx = stonesIdx;
 
 		// Input Checks
-		if (!validateInput(ix, iy, warriors.length))
+		if (!validateInput(ix, iy, noOfWarriors))
 			return;
 
 		// List of all allowed operators for this search problem
@@ -64,7 +64,7 @@ public class Endgame extends GenericSearchProblem {
 
 		// A bit representation of the alive warriors, 1 represents a warrior
 		// that's not dead yet
-		Warriors warriorsBitSet = new Warriors(warriors.length);
+		Warriors warriorsBitSet = new Warriors(noOfWarriors);
 		this.initialState.setValue(stateContents.warriors.label, warriorsBitSet);
 		// reset the number of expanded nodes
 		this.expandedNodesCounter = 0;
@@ -81,25 +81,25 @@ public class Endgame extends GenericSearchProblem {
 			return false;
 		}
 
-		for (Entry<Point, Integer> x : warriorsIdx.entrySet()) {
-			if (x.getKey().equals(thanosPos)) {
+		for (Point x : warriorsIdx.keySet()) {
+			if (x.equals(thanosPos)) {
 				System.err.println("Warrior and Thanos in same place!");
 				return false;
 			}
 
-			if (x.getKey().equals(new Point(ix, iy))) {
+			if (x.equals(new Point(ix, iy))) {
 				System.err.println("Warrior and Iron Man in same place!");
 				return false;
 			}
 
-			for (Entry<Point, Integer> y : stonesIdx.entrySet()) {
-				if (x.getKey().equals(y.getKey())) {
+			for (Point y : stonesIdx.keySet()) {
+				if (x.equals(y)) {
 					System.err.println("Warrior and Stone in same place!");
 					return false;
-				} else if (y.getKey().equals(thanosPos)) {
+				} else if (y.equals(thanosPos)) {
 					System.err.println("Stone and Thanos in same place!");
 					return false;
-				} else if (y.getKey().equals(new Point(ix, iy))) {
+				} else if (y.equals(new Point(ix, iy))) {
 					System.err.println("Stone and Iron Man in same place!");
 					return false;
 				}
@@ -294,10 +294,10 @@ public class Endgame extends GenericSearchProblem {
 	/*------------------------------Heuristics---------------------------------------*/
 	@Override
 	protected int evaluateHeuristic(Node currentNode, int heuristicNum) {
-		if(currentNode.getHeuristicCost() != null) {
+		if (currentNode.getHeuristicCost() != null) {
 			return currentNode.getHeuristicCost();
 		}
-		
+
 		int value;
 		switch (heuristicNum) {
 		case 1:
@@ -310,7 +310,7 @@ public class Endgame extends GenericSearchProblem {
 			value = -1;
 			break;
 		}
-		
+
 		currentNode.setHeuristicCost(value);
 
 		return value;

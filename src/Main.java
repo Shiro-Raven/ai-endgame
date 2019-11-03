@@ -93,8 +93,6 @@ public class Main {
 
 	static Endgame parser(String grid) {
 		int n, m, ix, iy, tx, ty;
-		Point[] warriors;
-		Point[] stones;
 		TreeMap<Point, Integer> warriorsIdx;
 		TreeMap<Point, Integer> stonesIdx;
 		String[] variables = grid.split(";");
@@ -106,25 +104,22 @@ public class Main {
 		tx = Integer.parseInt(st.nextToken());
 		ty = Integer.parseInt(st.nextToken());
 
-		stones = stonesAndWarriors(variables[3],
+		stonesAndWarriors(variables[3],
 				stonesIdx = new TreeMap<>((a, b) -> (a.x != b.x ? a.x - b.x : a.y - b.y)));
-		warriors = stonesAndWarriors(variables[4],
+		int noOfWarriors = stonesAndWarriors(variables[4],
 				warriorsIdx = new TreeMap<>((a, b) -> (a.x != b.x ? a.x - b.x : a.y - b.y)));
 
-		return new Endgame(n, m, ix, iy, tx, ty, stones, warriors, warriorsIdx, stonesIdx);
+		return new Endgame(n, m, ix, iy, tx, ty, warriorsIdx, stonesIdx, noOfWarriors);
 	}
 
-	static Point[] stonesAndWarriors(String representation, TreeMap<Point, Integer> ptsToIdx) {
+	static int stonesAndWarriors(String representation, TreeMap<Point, Integer> ptsToIdx) {
 		StringTokenizer st = new StringTokenizer(representation, ",");
-		Point[] pts = new Point[st.countTokens() / 2];
-		
-		for (int i = 0; i < pts.length; i++) {
+		int i = 0;
+		while(st.hasMoreTokens()) {
 			int x = Integer.parseInt(st.nextToken()), y = Integer.parseInt(st.nextToken());
-			pts[i] = new Point(x, y);
-			ptsToIdx.put(new Point(x, y), i);
+			ptsToIdx.put(new Point(x, y), i++);
 		}
-
-		return pts;
+		return i;
 	}
 
 	/*
@@ -140,9 +135,6 @@ public class Main {
 				return null;
 
 			Node currentNode = algorithm.dequeue();
-			
-			//System.out.println("Examining: " + currentNode);
-			//((Endgame) problem).visualizeState(currentNode);
 
 			if (problem.isGoalState(currentNode))
 				return currentNode;
